@@ -7,10 +7,14 @@ module Droonga
     class GradualRunner
       attr_reader :start_n_clients, :end_n_clients, :step
 
+      DEFAULT_START_N_CLIENTS = 1
+      DEFAULT_END_N_CLIENTS = 1
+      DEFAULT_STEP = 1
+
       def initialize(params)
-        @start_n_clients = params[:start_n_clients]
-        @end_n_clients = params[:end_n_clients]
-        @step = params[:step]
+        @start_n_clients = params[:start_n_clients] || DEFAULT_START_N_CLIENTS
+        @end_n_clients = params[:end_n_clients] || DEFAULT_END_N_CLIENTS
+        @step = params[:step] || DEFAULT_STEP
       end
 
       def run
