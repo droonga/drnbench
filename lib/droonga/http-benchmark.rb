@@ -8,9 +8,12 @@ module Droonga
   class HttpBenchmark
     attr_reader :duration, :n_clients
 
-    MIN_DURATION = 1.0
+    MIN_DURATION = 1
+    DEFAULT_DURATION = 10
     MIN_WAIT = 0
+    DEFAULT_WAIT = 1
     MAX_N_CLIENTS = 16
+    DEFAULT_N_CLIENTS = 1
     TOTAL_N_REQUESTS = 1000
 
     DEFAULT_HOST = "localhost"
@@ -19,9 +22,9 @@ module Droonga
     DEFAULT_METHOD = "GET"
 
     def initialize(params)
-      @duration = [params[:duration], MIN_DURATION].max
-      @wait = [params[:wait], MIN_WAIT].max
-      @n_clients = [params[:n_clients], MAX_N_CLIENTS].min
+      @duration = [params[:duration] || DEFAULT_DURATION, MIN_DURATION].max
+      @wait = [params[:wait] || DEFAULT_WAIT, MIN_WAIT].max
+      @n_clients = [params[:n_clients] || DEFAULT_N_CLIENTS, MAX_N_CLIENTS].min
       @n_requests = params[:n_requests] || TOTAL_N_REQUESTS
 
       @default_host = params[:host] || DEFAULT_HOST
