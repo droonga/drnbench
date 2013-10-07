@@ -140,7 +140,7 @@ module Droonga
       puts "Elapsed time:"
       puts "  min:     #{min_elapsed_time} sec"
       puts "  max:     #{max_elapsed_time} sec"
-      puts "  average: #{total_elapsed_time.to_f / total_elapsed_time} sec"
+      puts "  average: #{total_elapsed_time / total_n_requests} sec"
     end
 
     def populate_requests
