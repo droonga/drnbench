@@ -129,7 +129,7 @@ class HttpBenchmark
            "(#{total_n_requests / @duration} queries per second)"
     puts "Status:"
     http_status_percentages.each do |status|
-      puts "  #{status[:status}: #{status[:percentage]} %"
+      puts "  #{status[:status}}: #{status[:percentage]} %"
     end
     puts "Elapsed time:"
     puts "  min:     #{min_elapsed_time} sec"
