@@ -123,7 +123,7 @@ module Droonga
 
       http_status_percentages = []
       http_statuses.each do |status, n_results|
-        percentage = n_resulsts.to_f / total_n_requests * 100
+        percentage = n_results.to_f / total_n_requests * 100
         http_status_percentages << { :percentage => percentage,
                                      :status => status }
       end
