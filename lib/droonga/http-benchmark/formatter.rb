@@ -4,7 +4,7 @@ module Droonga
   module HttpBenchmark
     class Formatter
       class << self
-        def output_one_result(result)I
+        def output_one_result(result)
           puts "Total requests: #{result[:total_n_requests]} " +
                  "(#{result[:queries_per_second]} queries per second)"
           puts "Status:"
