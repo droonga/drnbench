@@ -76,6 +76,7 @@ module Droonga
                                  :status => response.code,
                                  :elapsed_time => Time.now - start_time)
             end
+            sleep request[:wait]
           end
         end
       end
@@ -171,6 +172,7 @@ module Droonga
         request[:path] ||= @default_path
         request[:method] ||= @default_method
         request[:method] = request[:method].upcase
+        request[:wait] ||= @wait
         @requests << request
       end
     end
