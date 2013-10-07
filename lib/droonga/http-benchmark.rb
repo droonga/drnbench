@@ -172,7 +172,7 @@ module Droonga
       end
       base_patterns = base_patterns.shuffle
 
-      n_requests.times do |count|
+      n_requests.round.times do |count|
         request = base_patterns[count % base_patterns.size]
         request[:host] ||= @default_host
         request[:port] ||= @default_port
