@@ -10,6 +10,10 @@ option_parser = OptionParser.new do |parser|
             "duration of the benmark") do |duration|
     options[:duration] = duration
   end
+  parser.on("--wait=SECONDS", Float,
+            "wait for each request") do |wait|
+    options[:wait] = wait
+  end
   parser.on("--n-threads=N", Integer,
             "number of threads") do |n_threads|
     options[:n_threads] = n_threads
@@ -25,5 +29,6 @@ if options[:threads].nil?
 end
 
 benchmark = Droonga::HttpBenchmark.new(:duration => options[:duration],
+                                       :wait => options[:wait],
                                        :n_threads => options[:n_threads])
 benchmark.run
