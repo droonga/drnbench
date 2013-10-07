@@ -10,7 +10,7 @@ class HttpBenchmark
   MIN_DURATION = 1.0
   MIN_WAIT = 0
   MAX_N_CLIENTS = 16
-  TOTAL_N_REQUESTS = 1000,
+  TOTAL_N_REQUESTS = 1000
 
   DEFAULT_HOST = "localhost"
   DEFAULT_PORT = 80
