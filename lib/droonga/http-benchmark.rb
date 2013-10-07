@@ -7,7 +7,7 @@ class HttpBenchmark
   MIN_WAIT = 0
   MAX_N_THREADS = 16
 
-  TOTAL_N_REQUESTS = 1000,
+  TOTAL_N_REQUESTS = 1000
 
   def initialize(params)
     @duration = [params[:duration], MIN_DURATION].max
