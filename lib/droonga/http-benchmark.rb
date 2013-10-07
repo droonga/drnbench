@@ -4,6 +4,7 @@ require "thread"
 require "net/http"
 require "json"
 
+module Droonga
 class HttpBenchmark
   attr_reader :duration, :n_clients
 
@@ -170,4 +171,5 @@ class HttpBenchmark
       @requests << request
     end
   end
+end
 end
