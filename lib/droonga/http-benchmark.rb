@@ -92,7 +92,7 @@ module Droonga
       end
 
       @client_threads.each do |client_thread|
-        client_thread.stop
+        client_thread.exit
       end
 
       @results = []
