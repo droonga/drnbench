@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-require "./runner"
+require "droonga/http-benchmark/runner"
 
 module Droonga
   module HttpBenchmark

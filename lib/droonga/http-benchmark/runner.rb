@@ -3,7 +3,7 @@
 require "thread"
 require "net/http"
 require "json"
-require "./formatter"
+require "droonga/http-benchmark/formatter"
 
 module Droonga
   module HttpBenchmark
