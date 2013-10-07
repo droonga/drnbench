@@ -1,19 +1,32 @@
 # -*- coding: utf-8 -*-
 
+require "thread"
+require "net/http"
+require "json"
+
 class HttpBenchmark
-  attr_reader :duration, :threads_count
+  attr_reader :duration, :n_clients
 
   MIN_DURATION = 1.0
   MIN_WAIT = 0
-  MAX_N_THREADS = 16
-
+  MAX_N_CLIENTS = 16
   TOTAL_N_REQUESTS = 1000,
+
+  DEFAULT_HOST = "localhost"
+  DEFAULT_PORT = 80
+  DEFAULT_PATH = "/"
+  DEFAULT_METHOD = "GET"
 
   def initialize(params)
     @duration = [params[:duration], MIN_DURATION].max
     @wait = [params[:wait], MIN_WAIT].max
-    @n_threads = [params[:n_threads], MAX_N_THREADS].min
+    @n_clients = [params[:n_clients], MAX_N_CLIENTS].min
     @n_requests = params[:n_requests] || TOTAL_N_REQUESTS
+
+    @default_host = params[:host] || DEFAULT_HOST
+    @default_port = params[:port] || DEFAULT_PORT
+    @default_path = params[:path] || DEFAULT_PATH
+    @default_method = params[:method] || DEFAULT_METHOD
 
     if params[:request_pattern]
       params[:request_pattern][:frequency] = 1
@@ -53,7 +66,13 @@ class HttpBenchmark
     base_patterns = base_patterns.shuffle
 
     0.upto(n_requests) do |count|
-      @requests << base_patterns[count % base_patterns.size]
+      request = base_patterns[count % base_patterns.size]
+      request[:host] ||= @default_host
+      request[:port] ||= @default_port
+      request[:path] ||= @default_path
+      request[:method] ||= @default_method
+      request[:method] = request[:method].upcase
+      @requests << request
     end
   end
 end

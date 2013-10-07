@@ -14,9 +14,26 @@ option_parser = OptionParser.new do |parser|
             "wait for each request") do |wait|
     options[:wait] = wait
   end
-  parser.on("--n-threads=N", Integer,
-            "number of threads") do |n_threads|
-    options[:n_threads] = n_threads
+  parser.on("--n-clients=N", Integer,
+            "number of clients") do |n_clients|
+    options[:n_clients] = n_clients
+  end
+
+  parser.on("--host=HOST", String,
+            "default host name (optional)") do |host|
+    options[:host] = host
+  end
+  parser.on("--port=PORT", Integer,
+            "default port number (optional)") do |port|
+    options[:port] = port
+  end
+  parser.on("--path=PATH", String,
+            "default path (optional)") do |path|
+    options[:path] = path
+  end
+  parser.on("--method=METHOD", String,
+            "default HTTP method (optional)") do |method|
+    options[:method] = method
   end
 end
 args = option_parser.parse!(ARGV)
@@ -24,11 +41,15 @@ args = option_parser.parse!(ARGV)
 if options[:duration].nil?
   raise "You must specify the test duration by --duration option."
 end
-if options[:threads].nil?
-  raise "You must specify the count of request threads by --threads option."
+if options[:clients].nil?
+  raise "You must specify the number of clients by --clients option."
 end
 
 benchmark = Droonga::HttpBenchmark.new(:duration => options[:duration],
                                        :wait => options[:wait],
-                                       :n_threads => options[:n_threads])
+                                       :n_clients => options[:n_clients],
+                                       :host => options[:host],
+                                       :port => options[:port],
+                                       :path => options[:path],
+                                       :method => options[:method])
 benchmark.run
