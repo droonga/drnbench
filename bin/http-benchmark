@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+require "droonga/http-benchmark"
+require "optparse"
+
+options = {}
+option_parser = OptionParser.new do |parser|
+  parser.on("--duration=SECONDS",
+            "duration of the benmark") do |duration|
+    options[:duration] = duration.to_f
+  end
+  parser.on("--threads=COUNT",
+            "count of threads") do |threads|
+    options[:threads] = threads.to_i
+  end
+end
+args = option_parser.parse!(ARGV)
+
+if options[:duration].nil?
+  raise "You must specify the test duration by --duration option."
+end
+if options[:threads].nil?
+  raise "You must specify the count of request threads by --threads option."
+end
+
+benchmark = Droonga::HttpBenchmark.new(:duration => options[:duration],
+                                       :threads_count => options[:threads])
+benchmark.run
