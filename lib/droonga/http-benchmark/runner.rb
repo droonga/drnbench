@@ -56,9 +56,10 @@ module Droonga
         results_queue = Queue.new
 
         @clients = 0.upto(@n_clients - 1).collect do |index|
-          Client.new(:requests => requests_queue,
-                     :results => results_queue,
-                     :wait => @wait)
+          client = Client.new(:requests => requests_queue,
+                              :results => results_queue,
+                              :wait => @wait)
+          client.run
         end
 
         start_time = Time.now
@@ -200,6 +201,7 @@ module Droonga
               sleep @wait
             end
           end
+          self
         end
 
         def stop
