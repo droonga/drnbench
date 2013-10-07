@@ -132,7 +132,7 @@ module Droonga
       end
 
       puts "Total requests: #{total_n_requests} " +
-             "(#{total_n_requests / @duration} queries per second)"
+             "(#{total_n_requests.to_f / @duration} queries per second)"
       puts "Status:"
       http_status_percentages.each do |status|
         puts "  #{status[:status]}: #{status[:percentage]} %"
