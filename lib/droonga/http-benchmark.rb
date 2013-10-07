@@ -52,7 +52,7 @@ class HttpBenchmark
     else
     base_patterns = base_patterns.shuffle
 
-    0.upto(n_requests) do |count|
+    n_requests.times do |count|
       @requests << base_patterns[count % base_patterns.size]
     end
   end
