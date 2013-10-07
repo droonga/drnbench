@@ -160,7 +160,7 @@ class HttpBenchmark
     else
     base_patterns = base_patterns.shuffle
 
-    0.upto(n_requests) do |count|
+    n_requests.times do |count|
       request = base_patterns[count % base_patterns.size]
       request[:host] ||= @default_host
       request[:port] ||= @default_port
