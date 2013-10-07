@@ -117,7 +117,7 @@ module Droonga
         end
 
         @result = {
-          :total_n_rewuests => total_n_requests,
+          :total_n_requests => total_n_requests,
           :queries_per_second => total_n_requests.to_f / @duration,
           :responses => sorted_http_statuses,
           :min_elapsed_time => min_elapsed_time,
