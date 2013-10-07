@@ -7,7 +7,7 @@ require "json"
 module Droonga
   module HttpBenchmark
     class Runner
-      attr_reader :duration, :n_clients
+      attr_reader :duration, :n_clients, :result
 
       MIN_DURATION = 1
       DEFAULT_DURATION = 10
@@ -45,6 +45,8 @@ module Droonga
       def run
         process_requests
         analyze_results
+        output_result
+        @result
       end
 
       private
@@ -131,17 +133,32 @@ module Droonga
         http_status_percentages.sort! do |a, b|
           (-1) * (a[:percentage] <=> b[:percentage])
         end
-
-        puts "Total requests: #{total_n_requests} " +
-               "(#{total_n_requests.to_f / @duration} queries per second)"
-        puts "Status:"
+        sorted_http_statuses = {}
         http_status_percentages.each do |status|
-          puts "  #{status[:status]}: #{status[:percentage]} %"
+          sorted_http_statuses[status[:status]] = status[:percentage]
+        end
+
+        @result = {
+          :total_n_rewuests => total_n_requests,
+          :queries_per_second => total_n_requests.to_f / @duration,
+          :responses => sorted_http_statuses,
+          :min_elapsed_time => min_elapsed_time,
+          :max_elapsed_time => max_elapsed_time,
+          :average_elapsed_time => total_elapsed_time / total_n_requests,
+        }
+      end
+
+      def output_result
+        puts "Total requests: #{@result[:total_n_requests]} " +
+               "(#{@result[:queries_per_second]} queries per second)"
+        puts "Status:"
+        @result[:responses].each do |status, percentage|
+          puts "  #{status}: #{percentage} %"
         end
         puts "Elapsed time:"
-        puts "  min:     #{min_elapsed_time} sec"
-        puts "  max:     #{max_elapsed_time} sec"
-        puts "  average: #{total_elapsed_time / total_n_requests} sec"
+        puts "  min:     #{@result[:min_elapsed_time} sec"
+        puts "  max:     #{@result[:max_elapsed_time} sec"
+        puts "  average: #{@result[:average_elapsed_time]} sec"
       end
 
       def populate_requests
