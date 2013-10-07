@@ -145,7 +145,6 @@ module Droonga
 
     def populate_requests
       @requests = []
-      @current_request = 0
 
       if @request_patterns.is_a?(Array)
         @request_patterns.each do |request_pattern|
