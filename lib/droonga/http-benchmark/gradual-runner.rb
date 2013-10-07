@@ -28,6 +28,7 @@ module Droonga
         @results = {}
         @start_n_clients.step(@end_n_clients, @step) do |n_clients|
           benchmark = Runner.new(@params.merge(:n_clients => n_clients))
+          puts "Running benchmark with #{n_clients} clients..."
           @results[n_clients] = benchmark.run
         end
       end
