@@ -155,9 +155,9 @@ class HttpBenchmark
     base_patterns = nil
     if request_pattern[:pattern]
       base_patterns = [request_pattern[:pattern]]
-    end
-      base_patterns = request_pattern[:patterns]
     else
+      base_patterns = request_pattern[:patterns]
+    end
     base_patterns = base_patterns.shuffle
 
     n_requests.times do |count|
