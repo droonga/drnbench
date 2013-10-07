@@ -55,33 +55,10 @@ module Droonga
         requests_queue = Queue.new
         results_queue = Queue.new
 
-        @client_threads = 0.upto(@n_clients - 1).collect do |index|
-          Thread.new do
-            loop do
-              request = requests_queue.pop
-              Net::HTTP.start(request[:host], request[:port]) do |http|
-                header = {
-                  "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::HttpBenchmark"
-                }
-                response = nil
-                start_time = Time.now
-                case request[:method]
-                when "GET"
-                  response = http.get(request[:path], header)
-                when "POST"
-                  body = request[:body]
-                  unless body.is_a?(String)
-                    body = JSON.generate(body)
-                  end
-                  response = http.post(request[:path], body, header)
-                end
-                results_queue.push(:request => request,
-                                   :status => response.code,
-                                   :elapsed_time => Time.now - start_time)
-              end
-              sleep @wait
-            end
-          end
+        @clients = 0.upto(@n_clients - 1).collect do |index|
+          Client.new(:requests => requests_queue,
+                     :results => results_queue,
+                     :wait => @wait)
         end
 
         start_time = Time.now
@@ -94,8 +71,8 @@ module Droonga
           sleep 1
         end
 
-        @client_threads.each do |client_thread|
-          client_thread.exit
+        @clients.each do |client|
+          client.stop
         end
 
         @results = []
@@ -184,6 +161,49 @@ module Droonga
           request[:method] ||= @default_method
           request[:method] = request[:method].upcase
           @requests << request
+        end
+      end
+
+      class Client
+        attr_reader :requests, :results, :wait
+
+        def initialize(params)
+          @requests = params[:requests]
+          @results = params[:results]
+          @wait = params[:wait]
+        end
+
+        def run
+          @thread = Thread.new do
+            loop do
+              request = @requests.pop
+              Net::HTTP.start(request[:host], request[:port]) do |http|
+                header = {
+                  "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::HttpBenchmark::Runner::Client"
+                }
+                response = nil
+                start_time = Time.now
+                case request[:method]
+                when "GET"
+                  response = http.get(request[:path], header)
+                when "POST"
+                  body = request[:body]
+                  unless body.is_a?(String)
+                    body = JSON.generate(body)
+                  end
+                  response = http.post(request[:path], body, header)
+                end
+                @results.push(:request => request,
+                              :status => response.code,
+                              :elapsed_time => Time.now - start_time)
+              end
+              sleep @wait
+            end
+          end
+        end
+
+        def stop
+          @thread.exit
         end
       end
     end
