@@ -56,7 +56,7 @@ module Droonga
           loop do
             next if requests_queue.empty?
             request = requests_queue.pop
-            Net::HTTP.new(request[:host], request[:port]) do |http|
+            Net::HTTP.new(request[:host], request[:port]).start do |http|
               header = {
                 "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::HttpBenchmark"
               }
