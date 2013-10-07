@@ -6,13 +6,13 @@ require "optparse"
 
 options = {}
 option_parser = OptionParser.new do |parser|
-  parser.on("--duration=SECONDS",
+  parser.on("--duration=SECONDS", Float,
             "duration of the benmark") do |duration|
-    options[:duration] = duration.to_f
+    options[:duration] = duration
   end
-  parser.on("--threads=COUNT",
+  parser.on("--threads=COUNT", Integer,
             "count of threads") do |threads|
-    options[:threads] = threads.to_i
+    options[:threads] = threads
   end
 end
 args = option_parser.parse!(ARGV)
