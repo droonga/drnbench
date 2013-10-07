@@ -45,7 +45,7 @@ if options[:clients].nil?
   raise "You must specify the number of clients by --clients option."
 end
 
-benchmark = Droonga::HttpBenchmark.new(:duration => options[:duration],
+benchmark = Droonga::HttpBenchmark::Runner.new(:duration => options[:duration],
                                        :wait => options[:wait],
                                        :n_clients => options[:n_clients],
                                        :host => options[:host],
