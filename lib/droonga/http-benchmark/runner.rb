@@ -58,7 +58,6 @@ module Droonga
         @client_threads = 0.upto(@n_clients).collect do |index|
           Thread.new do
             loop do
-              next if requests_queue.empty?
               request = requests_queue.pop
               Net::HTTP.start(request[:host], request[:port]) do |http|
                 header = {
