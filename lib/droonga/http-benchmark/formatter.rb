@@ -42,7 +42,7 @@ module Droonga
                    "#{response_statuses.join(",")}," +
                    "#{result[:min_elapsed_time]}," +
                    "#{result[:max_elapsed_time]}," +
-                   "#{result[:average_elapsed_time]},"
+                   "#{result[:average_elapsed_time]}"
           end
         end
       end
