@@ -88,6 +88,7 @@ module Droonga
             requests_queue.push(request)
           end
         end
+        sleep 1
       end
 
       @client_threads.each do |client_thread|
