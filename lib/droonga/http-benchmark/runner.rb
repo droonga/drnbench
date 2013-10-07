@@ -55,7 +55,7 @@ module Droonga
         requests_queue = Queue.new
         results_queue = Queue.new
 
-        @client_threads = 0.upto(@n_clients).collect do |index|
+        @client_threads = 0.upto(@n_clients - 1).collect do |index|
           Thread.new do
             loop do
               request = requests_queue.pop
