@@ -38,6 +38,12 @@ class HttpBenchmark
   end
 
   def run
+    process_requests
+    analyze_results
+  end
+
+  private
+  def process_requests
     requests_queue = Queue.new
     results_queue = Queue.new
 
@@ -82,9 +88,55 @@ class HttpBenchmark
     @client_threads.each do |client_thread|
       client_thread.stop
     end
+
+    @results = []
+    while not results_queue.empty?
+      @results << results_queue.pop
+    end
   end
 
-  private
+  def analyze_results
+    total_n_requests = @results.size
+    http_statuses = {}
+    min_elapsed_time = @duration
+    max_elapsed_time = 0
+    total_elapsed_time = 0
+
+    @results.each do |result|
+      http_statuses[result[:status]] ||= 0
+      http_statuses[result[:status]] += 1
+
+      if result[:elapsed_time] < min_elapsed_time
+        min_elapsed_time = result[:elapsed_time]
+      end
+      if result[:elapsed_time] > max_elapsed_time
+        max_elapsed_time = result[:elapsed_time]
+      end
+      total_elapsed_time += result[:elapsed_time]
+    end
+
+    http_status_percentages = []
+    http_statuses.each do |status, n_results|
+      percentage = n_resulsts.to_f / total_n_requests * 100
+      http_status_percentages << { :percentage => percentage,
+                                   :status => status }
+    end
+    http_status_percentages.sort! do |a, b|
+      (-1) * (a[:percentage] <=> b[:percentage])
+    end
+
+    puts "Total requests: #{total_n_requests} " +
+           "(#{total_n_requests / @duration} queries per second)"
+    puts "Status:"
+    http_status_percentages.each do |status|
+      puts "  #{status[:status}: #{status[:percentage]} %"
+    end
+    puts "Elapsed time:"
+    puts "  min:     #{min_elapsed_time} sec"
+    puts "  max:     #{max_elapsed_time} sec"
+    puts "  average: #{total_elapsed_time.to_f / total_elapsed_time} sec"
+  end
+
   def populate_requests
     @requests = []
     @current_request = 0
