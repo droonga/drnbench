@@ -12,8 +12,8 @@ module Droonga
             puts "  #{status}: #{percentage} %"
           end
           puts "Elapsed time:"
-          puts "  min:     #{result[:min_elapsed_time} sec"
-          puts "  max:     #{result[:max_elapsed_time} sec"
+          puts "  min:     #{result[:min_elapsed_time]} sec"
+          puts "  max:     #{result[:max_elapsed_time]} sec"
           puts "  average: #{result[:average_elapsed_time]} sec"
         end
 
