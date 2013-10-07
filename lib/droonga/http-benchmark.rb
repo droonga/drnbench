@@ -38,7 +38,50 @@ class HttpBenchmark
   end
 
   def run
-    raise "not implemented"
+    requests_queue = Queue.new
+    results_queue = Queue.new
+
+    @client_threads = 0.upto(@n_clients).collect do |index|
+      Thread.new do
+        loop do
+          next if requests_queue.empty?
+          request = requests_queue.pop
+          Net::HTTP.new(request[:host], request[:port]) do |http|
+            header = {
+              "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::HttpBenchmark"
+            }
+            response = nil
+            start_time = Time.now
+            case request[:method]
+            when "GET"
+              response = http.get(request[:path], header)
+            when "POST"
+              body = request[:body]
+              unless body.is_a?(String)
+                body = JSON.generate(body)
+              end
+              response = http.post(request[:path], body, header)
+            end
+            results_queue.push(:request => request,
+                               :status => response.code,
+                               :elapsed_time => Time.now - start_time)
+          end
+        end
+      end
+    end
+
+    start_time = Time.now
+    while Time.now - start_time < @duration
+      if requests_queue.empty?
+        @requests.each do |request|
+          requests_queue.push(request)
+        end
+      end
+    end
+
+    @client_threads.each do |client_thread|
+      client_thread.stop
+    end
   end
 
   private
