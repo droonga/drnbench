@@ -147,8 +147,14 @@ module Droonga
       @requests = []
       @current_request = 0
 
-      @request_patterns.each do |request_pattern|
-        populate_request_pattern(request_pattern)
+      if @request_patterns.is_a?(Array)
+        @request_patterns.each do |request_pattern|
+          populate_request_pattern(request_pattern)
+        end
+      else
+        @request_patterns.each do |key, request_pattern|
+          populate_request_pattern(request_pattern)
+        end
       end
 
       @requests.shuffle!
