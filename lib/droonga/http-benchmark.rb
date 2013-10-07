@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class HttpBenchmark
-  attr_reader :duration, :threads_count
+  attr_reader :duration, :n_threads
 
   MIN_DURATION = 1.0
   MIN_WAIT = 0
