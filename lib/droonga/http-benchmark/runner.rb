@@ -3,6 +3,7 @@
 require "thread"
 require "net/http"
 require "json"
+require "./formatter"
 
 module Droonga
   module HttpBenchmark
@@ -45,7 +46,7 @@ module Droonga
       def run
         process_requests
         analyze_results
-        output_result
+        Formatter.output_one_result(@result)
         @result
       end
 
@@ -146,19 +147,6 @@ module Droonga
           :max_elapsed_time => max_elapsed_time,
           :average_elapsed_time => total_elapsed_time / total_n_requests,
         }
-      end
-
-      def output_result
-        puts "Total requests: #{@result[:total_n_requests]} " +
-               "(#{@result[:queries_per_second]} queries per second)"
-        puts "Status:"
-        @result[:responses].each do |status, percentage|
-          puts "  #{status}: #{percentage} %"
-        end
-        puts "Elapsed time:"
-        puts "  min:     #{@result[:min_elapsed_time} sec"
-        puts "  max:     #{@result[:max_elapsed_time} sec"
-        puts "  average: #{@result[:average_elapsed_time]} sec"
       end
 
       def populate_requests
