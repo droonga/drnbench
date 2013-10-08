@@ -38,13 +38,13 @@ module Droonga
               end
             end
             result[:response_statuses] = response_statuses.join(",")
-            puts ("%{n_clients}," +
+            puts(("%{n_clients}," +
                     "%{total_n_requests}," +
                     "%{queries_per_second}," +
                     "%{response_statuses}," +
                     "%{min_elapsed_time}," +
                     "%{max_elapsed_time}," +
-                    "%{average_elapsed_time}") % result
+                    "%{average_elapsed_time}") % result)
           end
         end
       end
