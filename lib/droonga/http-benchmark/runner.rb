@@ -55,7 +55,7 @@ module Droonga
         requests_queue = Queue.new
         results_queue = Queue.new
 
-        @clients = 0.upto(@n_clients - 1).collect do |index|
+        @clients = @n_clients.times.collect do |index|
           client = Client.new(:requests => requests_queue,
                               :results => results_queue,
                               :wait => @wait)
