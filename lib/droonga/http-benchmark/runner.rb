@@ -60,6 +60,7 @@ module Droonga
                               :results => results_queue,
                               :wait => @wait)
           client.run
+          client
         end
 
         start_time = Time.now
