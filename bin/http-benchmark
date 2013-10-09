@@ -72,7 +72,8 @@ if options[:request_patterns_file].nil?
 end
 
 request_patterns = File.read(options[:request_patterns_file])
-options[:request_patterns] = JSON.parse(request_patterns)
+request_patterns = JSON.parse(request_patterns, :symbolize_names => true)
+options[:request_patterns] = request_patterns
 
 runner = Droonga::HttpBenchmark::GradualRunner.new(options)
 runner.run
