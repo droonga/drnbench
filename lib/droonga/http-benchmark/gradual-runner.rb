@@ -57,7 +57,9 @@ module Droonga
         end
 
         def to_csv
-          ([csv_header] + csv_body).to_csv
+          ([csv_header] + csv_body).collect do |row|
+            CSV.generate_line(row)
+          end.join("\n")
         end
 
         private
