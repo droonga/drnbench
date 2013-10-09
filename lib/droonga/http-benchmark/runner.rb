@@ -163,7 +163,7 @@ module Droonga
         end
       end
 
-      def Result
+      class Result
         def initialize(params)
           @duration = params[:duration]
 
