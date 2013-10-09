@@ -2,4 +2,3 @@
 
 require "droonga/http-benchmark/runner"
 require "droonga/http-benchmark/gradual-runner"
-require "droonga/http-benchmark/formatter"
