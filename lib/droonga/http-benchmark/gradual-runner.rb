@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require "droonga/http-benchmark/runner"
+require "csv"
 
 module Droonga
   module HttpBenchmark
@@ -56,7 +57,7 @@ module Droonga
         end
 
         def to_csv
-          "#{csv_header}\n#{csv_body}"
+          ([csv_header] + csv_body).to_csv
         end
 
         private
@@ -71,16 +72,16 @@ module Droonga
         end
 
         def csv_header
-          (Runner::Result.keys + response_statuses).join(",")
+          Runner::Result.keys + response_statuses
         end
 
         def csv_body
           @results.values.collect do |result|
-            (result.values +
-             response_statuses.collect do |status|
-               result.response_status_percentages[status] || 0
-             end).join(",")
-          end.join("\n")
+            result.values +
+            response_statuses.collect do |status|
+              result.response_status_percentages[status] || 0
+            end
+          end
         end
       end
     end
