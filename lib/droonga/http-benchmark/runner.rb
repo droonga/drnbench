@@ -51,7 +51,8 @@ module Droonga
       private
       def process_requests
         requests_queue = Queue.new
-        @result = Result.new(:duration => @duration)
+        @result = Result.new(:n_clients => @n_clients,
+                             :duration => @duration)
 
         @clients = @n_clients.times.collect do |index|
           client = Client.new(:requests => requests_queue,
@@ -164,7 +165,23 @@ module Droonga
       end
 
       class Result
+        attr_reader :n_clients, :duration, :response_statuses
+
+        class << self
+          def keys
+            [
+              :n_clients,
+              :total_n_requests,
+              :queries_per_second,
+              :min_elapsed_time,
+              :max_elapsed_time,
+              :average_elapsed_time,
+            ]
+          end
+        end
+
         def initialize(params)
+          @n_clients = params[:n_clients]
           @duration = params[:duration]
 
           @results = []
@@ -220,6 +237,12 @@ module Droonga
           "  min:     #{min_elapsed_time} sec\n" +
           "  max:     #{max_elapsed_time} sec\n" +
           "  average: #{average_elapsed_time} sec"
+        end
+
+        def values
+          self.class.keys.collect do |column|
+            send(column)
+          end
         end
 
         private
