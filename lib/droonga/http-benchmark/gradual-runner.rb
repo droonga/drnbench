@@ -33,48 +33,48 @@ module Droonga
         end
       end
 
-    class Result
-      def initialize
-        @results = {}
-      end
-
-      def <<(result)
-        @response_statuses = nil
-        @results[result.n_clients] = result
-      end
-
-      def response_statuses
-        @response_statuses ||= prepare_response_statuses
-      end
-
-      def to_csv
-        "#{csv_header}\n#{csv_body}"
-      end
-
-      private
-      def prepare_response_statuses
-        response_statuses = []
-        @results.each do |n_clients, result|
-          response_statuses += result.response_statuses.keys
+      class Result
+        def initialize
+          @results = {}
         end
-        response_statuses.uniq!
-        response_statuses.sort!
-        response_statuses
-      end
 
-      def csv_header
-        (Runner::Result.keys + response_statuses).join(",")
-      end
+        def <<(result)
+          @response_statuses = nil
+          @results[result.n_clients] = result
+        end
 
-      def csv_body
-        @results.values.collect do |result|
-          (result.values +
-           response_statuses.collect do |status|
-             result.response_statuses[status] || 0
-           end).join(",")
-        end.join("\n")
+        def response_statuses
+          @response_statuses ||= prepare_response_statuses
+        end
+
+        def to_csv
+          "#{csv_header}\n#{csv_body}"
+        end
+
+        private
+        def prepare_response_statuses
+          response_statuses = []
+          @results.each do |n_clients, result|
+            response_statuses += result.response_statuses.keys
+          end
+          response_statuses.uniq!
+          response_statuses.sort!
+          response_statuses
+        end
+
+        def csv_header
+          (Runner::Result.keys + response_statuses).join(",")
+        end
+
+        def csv_body
+          @results.values.collect do |result|
+            (result.values +
+             response_statuses.collect do |status|
+               result.response_statuses[status] || 0
+             end).join(",")
+          end.join("\n")
+        end
       end
-    end
     end
   end
 end
