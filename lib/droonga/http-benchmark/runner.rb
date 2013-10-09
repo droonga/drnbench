@@ -214,8 +214,8 @@ module Droonga
             "(#{queries_per_second} queries per second)\n" +
           "Status:\n" +
           sorted_response_statuses.collect do |status, percentage|
-            "  #{status}: #{percentage} %\n"
-          end +
+            "  #{status}: #{percentage} %"
+          end.join("\n") + "\n" +
           "Elapsed time:\n" +
           "  min:     #{min_elapsed_time} sec\n" +
           "  max:     #{max_elapsed_time} sec\n" +
