@@ -3,6 +3,7 @@
 
 require "droonga/http-benchmark"
 require "optparse"
+require "json"
 
 options = {
   :start_n_clients => 1,
@@ -33,6 +34,11 @@ option_parser = OptionParser.new do |parser|
     options[:step] = step
   end
 
+  parser.on("--request-patterns-file=PATH",
+            "path to request patterns JSON file") do |path|
+    options[:request_patterns_file] = File.expand_path(path)
+  end
+
   parser.on("--host=HOST", String,
             "default host name (optional)") do |host|
     options[:host] = host
@@ -60,6 +66,13 @@ args = option_parser.parse!(ARGV)
 if options[:duration].nil?
   raise "You must specify the test duration by --duration option."
 end
+if options[:request_patterns_file].nil?
+  raise "You must specify the path to the request patterns JSON file " +
+          "by --request-patterns-file option."
+end
+
+request_patterns = File.read(options[:request_patterns_file])
+options[:request_patterns] = JSON.parse(request_patterns)
 
 runner = Droonga::HttpBenchmark::GradualRunner.new(options)
 runner.run
