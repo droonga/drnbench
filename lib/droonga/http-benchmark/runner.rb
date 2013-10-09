@@ -219,7 +219,7 @@ module Droonga
           "Elapsed time:\n" +
           "  min:     #{min_elapsed_time} sec\n" +
           "  max:     #{max_elapsed_time} sec\n" +
-          "  average: #{average_elapsed_time} sec" +
+          "  average: #{average_elapsed_time} sec"
         end
 
         private
