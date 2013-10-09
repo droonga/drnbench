@@ -4,7 +4,13 @@
 require "droonga/http-benchmark"
 require "optparse"
 
-options = {}
+options = {
+  :start_n_clients => 1,
+  :end_n_clients => 1,
+  :step => 1,
+  :report_progressively => true,
+  :output_path => "/tmp/http-benchmark-result.csv",
+}
 option_parser = OptionParser.new do |parser|
   parser.on("--duration=SECONDS", Float,
             "duration of the benmark") do |duration|
@@ -14,9 +20,17 @@ option_parser = OptionParser.new do |parser|
             "wait for each request") do |wait|
     options[:wait] = wait
   end
-  parser.on("--n-clients=N", Integer,
-            "number of clients") do |n_clients|
-    options[:n_clients] = n_clients
+  parser.on("--start-n-clients=N", Integer,
+            "initial number of clients (optional)") do |n_clients|
+    options[:start_n_clients] = n_clients
+  end
+  parser.on("--end-n-clients=N", Integer,
+            "final number of clients (optional)") do |n_clients|
+    options[:end_n_clients] = n_clients
+  end
+  parser.on("--step=COUNT", Integer,
+            "step to increase number of clients (optional)") do |step|
+    options[:step] = step
   end
 
   parser.on("--host=HOST", String,
@@ -35,21 +49,22 @@ option_parser = OptionParser.new do |parser|
             "default HTTP method (optional)") do |method|
     options[:method] = method
   end
+
+  parser.on("--output-path=PATH",
+            "path to output statistics as a CSV file (optional)") do |path|
+    options[:output_path] = File.expand_path(path)
+  end
 end
 args = option_parser.parse!(ARGV)
 
 if options[:duration].nil?
   raise "You must specify the test duration by --duration option."
 end
-if options[:clients].nil?
-  raise "You must specify the number of clients by --clients option."
-end
 
-benchmark = Droonga::HttpBenchmark::Runner.new(:duration => options[:duration],
-                                       :wait => options[:wait],
-                                       :n_clients => options[:n_clients],
-                                       :host => options[:host],
-                                       :port => options[:port],
-                                       :path => options[:path],
-                                       :method => options[:method])
-benchmark.run
+runner = Droonga::HttpBenchmark::GradualRunner.new(options)
+runner.run
+
+File.open(options[:output_path], "w") do |file|
+  file.puts runner.result.to_csv
+end
+puts "Statistics has been saved to #{options[:output_path]}"
