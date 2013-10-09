@@ -64,7 +64,7 @@ module Droonga
       end
 
       def csv_header
-        (Result.keys + response_statuses).join(",")
+        (Runner::Result.keys + response_statuses).join(",")
       end
 
       def csv_body
