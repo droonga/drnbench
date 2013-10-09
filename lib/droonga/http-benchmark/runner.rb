@@ -3,7 +3,6 @@
 require "thread"
 require "net/http"
 require "json"
-require "droonga/http-benchmark/formatter"
 
 module Droonga
   module HttpBenchmark
@@ -45,19 +44,18 @@ module Droonga
 
       def run
         process_requests
-        analyze_results
-        Formatter.output_one_result(@result)
+        puts @result.to_s
         @result
       end
 
       private
       def process_requests
         requests_queue = Queue.new
-        results_queue = Queue.new
+        @result = Result.new(:duration => @duration)
 
         @clients = @n_clients.times.collect do |index|
           client = Client.new(:requests => requests_queue,
-                              :results => results_queue,
+                              :result => @result,
                               :wait => @wait)
           client.run
           client
@@ -77,54 +75,7 @@ module Droonga
           client.stop
         end
 
-        @results = []
-        while not results_queue.empty?
-          @results << results_queue.pop
-        end
-      end
-
-      def analyze_results
-        total_n_requests = @results.size
-        http_statuses = {}
-        min_elapsed_time = @duration
-        max_elapsed_time = 0
-        total_elapsed_time = 0
-
-        @results.each do |result|
-          http_statuses[result[:status]] ||= 0
-          http_statuses[result[:status]] += 1
-
-          if result[:elapsed_time] < min_elapsed_time
-            min_elapsed_time = result[:elapsed_time]
-          end
-          if result[:elapsed_time] > max_elapsed_time
-            max_elapsed_time = result[:elapsed_time]
-          end
-          total_elapsed_time += result[:elapsed_time]
-        end
-
-        http_status_percentages = []
-        http_statuses.each do |status, n_results|
-          percentage = n_results.to_f / total_n_requests * 100
-          http_status_percentages << { :percentage => percentage,
-                                       :status => status }
-        end
-        http_status_percentages.sort! do |a, b|
-          (-1) * (a[:percentage] <=> b[:percentage])
-        end
-        sorted_http_statuses = {}
-        http_status_percentages.each do |status|
-          sorted_http_statuses[status[:status]] = status[:percentage]
-        end
-
-        @result = {
-          :total_n_requests => total_n_requests,
-          :queries_per_second => total_n_requests.to_f / @duration,
-          :responses => sorted_http_statuses,
-          :min_elapsed_time => min_elapsed_time,
-          :max_elapsed_time => max_elapsed_time,
-          :average_elapsed_time => total_elapsed_time / total_n_requests,
-        }
+        @result
       end
 
       def populate_requests
@@ -171,7 +122,7 @@ module Droonga
 
         def initialize(params)
           @requests = params[:requests]
-          @results = params[:results]
+          @result = params[:result]
           @wait = params[:wait]
         end
 
@@ -195,9 +146,11 @@ module Droonga
                   end
                   response = http.post(request[:path], body, header)
                 end
-                @results.push(:request => request,
-                              :status => response.code,
-                              :elapsed_time => Time.now - start_time)
+                @result << {
+                  :request => request,
+                  :status => response.code,
+                  :elapsed_time => Time.now - start_time,
+                }
               end
               sleep @wait
             end
@@ -207,6 +160,93 @@ module Droonga
 
         def stop
           @thread.exit
+        end
+      end
+
+      def Result
+        def initialize(params)
+          @duration = params[:duration]
+
+          @results = []
+          @total_elapsed_time = 0.0
+          @elapsed_times = []
+          @response_statuses = {}
+        end
+
+        def <<(result)
+          clear_cached_statistics
+
+          @results << result
+
+          @response_statuses[result[:status]] ||= 0
+          @response_statuses[result[:status]] += 1
+
+          @elapsed_times << result[:elapsed_time]
+          @total_elapsed_time += result[:elapsed_time]
+        end
+
+        def total_n_requests
+          @total_n_requests ||= @results.size
+        end
+
+        def queries_per_second
+          @queries_per_second ||= total_n_requests.to_f / @duration
+        end
+
+        def sorted_response_statuses
+          @sorted_response_statuses ||= prepare_sorted_response_statuses
+        end
+
+        def min_elapsed_time
+          @min_elapsed_time ||= @elapsed_times.min
+        end
+
+        def max_elapsed_time
+          @max_elapsed_time ||= @elapsed_times.min
+        end
+
+        def average_elapsed_time
+          @average_elapsed_time ||= @total_elapsed_time / @elapsed_times.size
+        end
+
+        def to_s
+          "Total requests: #{total_n_requests} " +
+            "(#{queries_per_second} queries per second)\n" +
+          "Status:\n" +
+          sorted_response_statuses.collect do |status, percentage|
+            "  #{status}: #{percentage} %\n"
+          end +
+          "Elapsed time:\n" +
+          "  min:     #{min_elapsed_time} sec\n" +
+          "  max:     #{max_elapsed_time} sec\n" +
+          "  average: #{average_elapsed_time} sec" +
+        end
+
+        private
+        def clear_cached_statistics
+          @total_n_requests = nil
+          @queries_per_second = nil
+          @sorted_response_statuses = nil
+          @min_elapsed_time = nil
+          @max_elapsed_time = nil
+          @average_elapsed_time = nil
+        end
+
+        def prepare_sorted_response_statuses
+          http_status_percentages = []
+          @response_statuses.each do |status, n_results|
+            percentage = n_results.to_f / total_n_requests * 100
+            http_status_percentages << {:percentage => percentage,
+                                        :status => status}
+          end
+          http_status_percentages.sort! do |a, b|
+            (-1) * (a[:percentage] <=> b[:percentage])
+          end
+          sorted_response_statuses = {}
+          http_status_percentages.each do |status|
+            sorted_response_statuses[status[:status]] = status[:percentage]
+          end
+          sorted_response_statuses
         end
       end
     end
