@@ -44,7 +44,6 @@ module Droonga
 
       def run
         process_requests
-        puts @result.to_s
         @result
       end
 
