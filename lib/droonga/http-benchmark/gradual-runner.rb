@@ -25,16 +25,15 @@ module Droonga
 
       private
       def run_benchmarks
-        @result = GradualResult.new
+        @result = Result.new
         @start_n_clients.step(@end_n_clients, @step) do |n_clients|
           benchmark = Runner.new(@params.merge(:n_clients => n_clients))
           puts "Running benchmark with #{n_clients} clients..."
           @result << benchmark.run
         end
       end
-    end
 
-    class GradualResult
+    class Result
       def initialize
         @results = {}
       end
@@ -75,6 +74,7 @@ module Droonga
            end).join(",")
         end.join("\n")
       end
+    end
     end
   end
 end
