@@ -210,8 +210,8 @@ module Droonga
           @queries_per_second ||= total_n_requests.to_f / @duration
         end
 
-        def sorted_response_statuses
-          @sorted_response_statuses ||= prepare_sorted_response_statuses
+        def response_status_percentages
+          @response_status_percentages ||= prepare_response_status_percentages
         end
 
         def min_elapsed_time
@@ -230,7 +230,7 @@ module Droonga
           "Total requests: #{total_n_requests} " +
             "(#{queries_per_second} queries per second)\n" +
           "Status:\n" +
-          sorted_response_statuses.collect do |status, percentage|
+          response_status_percentages.collect do |status, percentage|
             "  #{status}: #{percentage} %"
           end.join("\n") + "\n" +
           "Elapsed time:\n" +
@@ -249,13 +249,13 @@ module Droonga
         def clear_cached_statistics
           @total_n_requests = nil
           @queries_per_second = nil
-          @sorted_response_statuses = nil
+          @response_status_percentages = nil
           @min_elapsed_time = nil
           @max_elapsed_time = nil
           @average_elapsed_time = nil
         end
 
-        def prepare_sorted_response_statuses
+        def prepare_response_status_percentages
           http_status_percentages = []
           @response_statuses.each do |status, n_results|
             percentage = n_results.to_f / total_n_requests * 100
@@ -265,11 +265,11 @@ module Droonga
           http_status_percentages.sort! do |a, b|
             (-1) * (a[:percentage] <=> b[:percentage])
           end
-          sorted_response_statuses = {}
+          response_status_percentages = {}
           http_status_percentages.each do |status|
-            sorted_response_statuses[status[:status]] = status[:percentage]
+            response_status_percentages[status[:status]] = status[:percentage]
           end
-          sorted_response_statuses
+          response_status_percentages
         end
       end
     end

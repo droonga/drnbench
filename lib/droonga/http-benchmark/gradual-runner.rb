@@ -70,7 +70,7 @@ module Droonga
           @results.values.collect do |result|
             (result.values +
              response_statuses.collect do |status|
-               result.response_statuses[status] || 0
+               result.response_status_percentages[status] || 0
              end).join(",")
           end.join("\n")
         end
