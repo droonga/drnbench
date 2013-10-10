@@ -27,7 +27,7 @@ module Droonga
 
         params[:host] ||= DEFAULT_HOST
         params[:port] ||= DEFAULT_PORT
-        params[:wait] ||= DEFAULT_WAIT;
+        params[:wait] ||= DEFAULT_WAIT
         params[:wait] = [params[:wait], MIN_WAIT].max
 
         @params = params
