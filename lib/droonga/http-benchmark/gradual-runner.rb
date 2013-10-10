@@ -6,8 +6,8 @@ require "csv"
 module Droonga
   module HttpBenchmark
     class GradualRunner
-      attr_reader :start_n_clients, :end_n_clients, :step,
-                    :report_progressively, :result
+      attr_reader :start_n_clients, :end_n_clients, :step
+      attr_reader :report_progressively, :result
 
       DEFAULT_START_N_CLIENTS = 1
       DEFAULT_END_N_CLIENTS = 1
