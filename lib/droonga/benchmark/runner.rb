@@ -5,7 +5,7 @@ require "net/http"
 require "json"
 
 module Droonga
-  module HttpBenchmark
+  module Benchmark
     class Runner
       attr_reader :duration, :n_clients, :result
 
@@ -132,7 +132,7 @@ module Droonga
               request = @requests.pop
               Net::HTTP.start(request[:host], request[:port]) do |http|
                 header = {
-                  "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::HttpBenchmark::Runner::Client"
+                  "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::Client"
                 }
                 response = nil
                 start_time = Time.now

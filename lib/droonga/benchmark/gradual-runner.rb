@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-require "droonga/http-benchmark/runner"
+require "droonga/benchmark/runner"
 require "csv"
 
 module Droonga
-  module HttpBenchmark
+  module Benchmark
     class GradualRunner
       attr_reader :start_n_clients, :end_n_clients, :step
       attr_reader :report_progressively, :result

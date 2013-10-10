@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-require "droonga/http-benchmark"
+require "droonga/benchmark"
 require "optparse"
 require "json"
 
@@ -10,7 +10,7 @@ options = {
   :end_n_clients => 1,
   :step => 1,
   :report_progressively => true,
-  :output_path => "/tmp/http-benchmark-result.csv",
+  :output_path => "/tmp/drnbench-result.csv",
 }
 option_parser = OptionParser.new do |parser|
   parser.on("--duration=SECONDS", Float,
@@ -75,7 +75,7 @@ request_patterns = File.read(options[:request_patterns_file])
 request_patterns = JSON.parse(request_patterns, :symbolize_names => true)
 options[:request_patterns] = request_patterns
 
-runner = Droonga::HttpBenchmark::GradualRunner.new(options)
+runner = Droonga::Benchmark::GradualRunner.new(options)
 runner.run
 
 File.open(options[:output_path], "w") do |file|
