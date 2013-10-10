@@ -17,21 +17,15 @@ module Droonga
       DEFAULT_N_CLIENTS = 1
       TOTAL_N_REQUESTS = 1000
 
-      DEFAULT_HOST = "localhost"
-      DEFAULT_PORT = 80
-      DEFAULT_PATH = "/"
-      DEFAULT_METHOD = "GET"
-
       def initialize(params)
         @duration = [params[:duration] || DEFAULT_DURATION, MIN_DURATION].max
-        @wait = [params[:wait] || DEFAULT_WAIT, MIN_WAIT].max
         @n_clients = [params[:n_clients] || DEFAULT_N_CLIENTS, MAX_N_CLIENTS].min
         @n_requests = params[:n_requests] || TOTAL_N_REQUESTS
 
-        @default_host = params[:host] || DEFAULT_HOST
-        @default_port = params[:port] || DEFAULT_PORT
-        @default_path = params[:path] || DEFAULT_PATH
-        @default_method = params[:method] || DEFAULT_METHOD
+        params[:wait] ||= DEFAULT_WAIT;
+        params[:wait] = [params[:wait], MIN_WAIT].max
+
+        @params = params
 
         if params[:request_pattern]
           params[:request_pattern][:frequency] = 1
@@ -54,9 +48,8 @@ module Droonga
                              :duration => @duration)
 
         @clients = @n_clients.times.collect do |index|
-          client = HttpClient.new(:requests => requests_queue,
-                                  :result => @result,
-                                  :wait => @wait)
+          client = HttpClient.new(@params.merge(:requests => requests_queue,
+                                                :result => @result))
           client.run
           client
         end
@@ -107,29 +100,39 @@ module Droonga
         base_patterns = base_patterns.shuffle
 
         n_requests.round.times do |count|
-          request = base_patterns[count % base_patterns.size]
-          request[:host] ||= @default_host
-          request[:port] ||= @default_port
-          request[:path] ||= @default_path
-          request[:method] ||= @default_method
-          request[:method] = request[:method].upcase
-          @requests << request
+          @requests << base_patterns[count % base_patterns.size]
         end
       end
 
       class HttpClient
         attr_reader :requests, :results, :wait
 
+        DEFAULT_HOST = "localhost"
+        DEFAULT_PORT = 80
+        DEFAULT_PATH = "/"
+        DEFAULT_METHOD = "GET"
+
         def initialize(params)
           @requests = params[:requests]
           @result = params[:result]
           @wait = params[:wait]
+
+          @default_host = params[:host] || DEFAULT_HOST
+          @default_port = params[:port] || DEFAULT_PORT
+          @default_path = params[:path] || DEFAULT_PATH
+          @default_method = params[:method] || DEFAULT_METHOD
         end
 
         def run
           @thread = Thread.new do
             loop do
               request = @requests.pop
+              request[:host] ||= @default_host
+              request[:port] ||= @default_port
+              request[:path] ||= @default_path
+              request[:method] ||= @default_method
+              request[:method] = request[:method].upcase
+
               Net::HTTP.start(request[:host], request[:port]) do |http|
                 header = {
                   "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
