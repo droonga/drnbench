@@ -164,7 +164,7 @@ module Droonga
       end
 
       class Result
-        attr_reader :n_clients, :duration, :response_statuses
+        attr_reader :n_clients, :duration, :statuses
 
         class << self
           def keys
@@ -186,7 +186,7 @@ module Droonga
           @results = []
           @total_elapsed_time = 0.0
           @elapsed_times = []
-          @response_statuses = {}
+          @statuses = {}
         end
 
         def <<(result)
@@ -194,8 +194,8 @@ module Droonga
 
           @results << result
 
-          @response_statuses[result[:status]] ||= 0
-          @response_statuses[result[:status]] += 1
+          @statuses[result[:status]] ||= 0
+          @statuses[result[:status]] += 1
 
           @elapsed_times << result[:elapsed_time]
           @total_elapsed_time += result[:elapsed_time]
@@ -209,8 +209,8 @@ module Droonga
           @queries_per_second ||= total_n_requests.to_f / @duration
         end
 
-        def response_status_percentages
-          @response_status_percentages ||= prepare_response_status_percentages
+        def status_percentages
+          @status_percentages ||= prepare_status_percentages
         end
 
         def min_elapsed_time
@@ -229,7 +229,7 @@ module Droonga
           "Total requests: #{total_n_requests} " +
             "(#{queries_per_second} queries per second)\n" +
           "Status:\n" +
-          response_status_percentages.collect do |status, percentage|
+          status_percentages.collect do |status, percentage|
             "  #{status}: #{percentage} %"
           end.join("\n") + "\n" +
           "Elapsed time:\n" +
@@ -248,27 +248,27 @@ module Droonga
         def clear_cached_statistics
           @total_n_requests = nil
           @queries_per_second = nil
-          @response_status_percentages = nil
+          @status_percentages = nil
           @min_elapsed_time = nil
           @max_elapsed_time = nil
           @average_elapsed_time = nil
         end
 
-        def prepare_response_status_percentages
-          http_status_percentages = []
-          @response_statuses.each do |status, n_results|
+        def prepare_status_percentages
+          status_percentages = []
+          @statuses.each do |status, n_results|
             percentage = n_results.to_f / total_n_requests * 100
-            http_status_percentages << {:percentage => percentage,
-                                        :status => status}
+            status_percentages << {:percentage => percentage,
+                                   :status => status}
           end
-          http_status_percentages.sort! do |a, b|
+          status_percentages.sort! do |a, b|
             (-1) * (a[:percentage] <=> b[:percentage])
           end
-          response_status_percentages = {}
-          http_status_percentages.each do |status|
-            response_status_percentages[status[:status]] = status[:percentage]
+          status_percentages = {}
+          status_percentages.each do |status|
+            status_percentages[status[:status]] = status[:percentage]
           end
-          response_status_percentages
+          status_percentages
         end
       end
     end

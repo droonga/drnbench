@@ -48,12 +48,12 @@ module Droonga
         end
 
         def <<(result)
-          @response_statuses = nil
+          @statuses = nil
           @results[result.n_clients] = result
         end
 
-        def response_statuses
-          @response_statuses ||= prepare_response_statuses
+        def statuses
+          @statuses ||= prepare_statuses
         end
 
         def to_csv
@@ -63,25 +63,25 @@ module Droonga
         end
 
         private
-        def prepare_response_statuses
-          response_statuses = []
+        def prepare_statuses
+          statuses = []
           @results.each do |n_clients, result|
-            response_statuses += result.response_statuses.keys
+            statuses += result.statuses.keys
           end
-          response_statuses.uniq!
-          response_statuses.sort!
-          response_statuses
+          statuses.uniq!
+          statuses.sort!
+          statuses
         end
 
         def csv_header
-          Runner::Result.keys + response_statuses
+          Runner::Result.keys + statuses
         end
 
         def csv_body
           @results.values.collect do |result|
             result.values +
-            response_statuses.collect do |status|
-              result.response_status_percentages[status] || 0
+            statuses.collect do |status|
+              result.status_percentages[status] || 0
             end
           end
         end
