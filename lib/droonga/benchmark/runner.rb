@@ -54,9 +54,9 @@ module Droonga
                              :duration => @duration)
 
         @clients = @n_clients.times.collect do |index|
-          client = Client.new(:requests => requests_queue,
-                              :result => @result,
-                              :wait => @wait)
+          client = HttpClient.new(:requests => requests_queue,
+                                  :result => @result,
+                                  :wait => @wait)
           client.run
           client
         end
@@ -117,7 +117,7 @@ module Droonga
         end
       end
 
-      class Client
+      class HttpClient
         attr_reader :requests, :results, :wait
 
         def initialize(params)
@@ -132,7 +132,7 @@ module Droonga
               request = @requests.pop
               Net::HTTP.start(request[:host], request[:port]) do |http|
                 header = {
-                  "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::Client"
+                  "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
                 }
                 response = nil
                 start_time = Time.now
