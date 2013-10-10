@@ -1,4 +1,4 @@
-http-benchmark
+drnbench
 ==============
 
-Generic benchmark tool for HTTP servers
+Generic benchmark tool for HTTP servers, mainly droonga
