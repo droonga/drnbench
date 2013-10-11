@@ -9,13 +9,13 @@ module Droonga
       def initialize(params)
         params[:path] ||= DEFAULT_PATH
         params[:method] ||= DEFAULT_METHOD
+        params[:requests] = populate_http_requests(params[:requests])
         super
-        populate_requests
       end
 
       private
-      def populate_requests
-        @requests.collect! do |queries|
+      def populate_http_requests(requests)
+        requests.collect do |queries|
           {
             :body => {
               :queries => queries,
