@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require "droonga/benchmark/client/http"
+require "droonga/benchmark/client/http-droonga-search"
 require "droonga/benchmark/result"
 
 module Droonga
