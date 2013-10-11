@@ -52,9 +52,16 @@ module Droonga
         @result = Result.new(:n_clients => @n_clients,
                              :duration => @duration)
 
+        client_params = @params.merge(:requests => requests_queue,
+                                      :result => @result)
         @clients = @n_clients.times.collect do |index|
-          client = HttpClient.new(@params.merge(:requests => requests_queue,
-                                                :result => @result))
+          client = nil
+          case @params[:mode]
+          when :http
+            client = HttpClient.new(client_params)
+          when :http_droonga_search
+            client = HttpDroongaSearchClient.new(client_params)
+          end
           client.run
           client
         end

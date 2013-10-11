@@ -9,6 +9,7 @@ options = {
   :start_n_clients => 1,
   :end_n_clients => 1,
   :step => 1,
+  :mode => :http,
   :report_progressively => true,
   :output_path => "/tmp/drnbench-result.csv",
 }
@@ -34,6 +35,13 @@ option_parser = OptionParser.new do |parser|
     options[:step] = step
   end
 
+  parser.on("--mode=MODE", String,
+            "mode of bencmark (optional)",
+            "available modes:",
+            "  http",
+            "  http-droonga-search") do |mode|
+    options[:mode] = mode.gsub(/-/, "_")
+  end
   parser.on("--request-patterns-file=PATH",
             "path to request patterns JSON file") do |path|
     options[:request_patterns_file] = File.expand_path(path)
