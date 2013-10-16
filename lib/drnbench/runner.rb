@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-require "droonga/benchmark/client/http"
-require "droonga/benchmark/client/http-droonga-search"
-require "droonga/benchmark/result"
+require "drnbench/client/http"
+require "drnbench/client/http-droonga-search"
+require "drnbench/result"
 
-module Droonga
-  module Benchmark
+module Drnbench
     class Runner
       attr_reader :duration, :n_clients, :result
 
@@ -116,5 +115,4 @@ module Droonga
         end
       end
     end
-  end
 end

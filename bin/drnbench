@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 
-require "droonga/benchmark"
+require "drnbench"
 require "optparse"
 require "json"
 
@@ -83,7 +83,7 @@ request_patterns = File.read(options[:request_patterns_file])
 request_patterns = JSON.parse(request_patterns, :symbolize_names => true)
 options[:request_patterns] = request_patterns
 
-runner = Droonga::Benchmark::GradualRunner.new(options)
+runner = Drnbench::GradualRunner.new(options)
 runner.run
 
 File.open(options[:output_path], "w") do |file|

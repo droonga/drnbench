@@ -4,8 +4,7 @@ require "thread"
 require "net/http"
 require "json"
 
-module Droonga
-  module Benchmark
+module Drnbench
     class HttpClient
       attr_reader :requests, :results, :wait
 
@@ -65,5 +64,4 @@ module Droonga
         @thread.exit
       end
     end
-  end
 end

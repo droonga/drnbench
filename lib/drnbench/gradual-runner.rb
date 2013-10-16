@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-require "droonga/benchmark/runner"
+require "drnbench/runner"
 require "csv"
 
-module Droonga
-  module Benchmark
+module Drnbench
     class GradualRunner
       attr_reader :start_n_clients, :end_n_clients, :step
       attr_reader :report_progressively, :result
@@ -87,5 +86,4 @@ module Droonga
         end
       end
     end
-  end
 end

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module Droonga
-  module Benchmark
+module Drnbench
     class Result
       attr_reader :n_clients, :duration, :statuses
 
@@ -110,5 +109,4 @@ module Droonga
         status_percentages
       end
     end
-  end
 end

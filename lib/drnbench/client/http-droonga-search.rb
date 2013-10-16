@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-module Droonga
-  module Benchmark
+module Drnbench
     class HttpDroongaSearchClient < HttpClient
       DEFAULT_PATH = "/droonga/search"
       DEFAULT_METHOD = "POST"
@@ -24,5 +23,4 @@ module Droonga
         end
       end
     end
-  end
 end
