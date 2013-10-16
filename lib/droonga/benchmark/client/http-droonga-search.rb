@@ -2,7 +2,7 @@
 
 module Droonga
   module Benchmark
-    class HttpDroongaSearchClient << HttpClient
+    class HttpDroongaSearchClient < HttpClient
       DEFAULT_PATH = "/droonga/search"
       DEFAULT_METHOD = "POST"
 
