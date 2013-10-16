@@ -1,10 +1,8 @@
-drnbench
-========
+# drnbench
 
 Generic benchmark tool for HTTP servers, mainly droonga
 
-License
--------
+## License
 
 The MIT License (MIT)
 
