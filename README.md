@@ -1,6 +1,10 @@
-# drnbench
+# Drnbench
 
-Generic benchmark tool for HTTP servers, mainly droonga
+## Description
+
+Drnbench is a benchmark tool for Droonga.
+
+It may be used for other HTTP servers.
 
 ## License
 
