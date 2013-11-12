@@ -12,7 +12,6 @@ module Drnbench
     DEFAULT_DURATION = 10
     MIN_WAIT = 0
     DEFAULT_WAIT = 1
-    MAX_N_CLIENTS = 16
     DEFAULT_N_CLIENTS = 1
     TOTAL_N_REQUESTS = 1000
 
@@ -21,7 +20,7 @@ module Drnbench
 
     def initialize(params)
       @duration = [params[:duration] || DEFAULT_DURATION, MIN_DURATION].max
-      @n_clients = [params[:n_clients] || DEFAULT_N_CLIENTS, MAX_N_CLIENTS].min
+      @n_clients = params[:n_clients] || DEFAULT_N_CLIENTS
       @n_requests = params[:n_requests] || TOTAL_N_REQUESTS
 
       params[:host] ||= DEFAULT_HOST
