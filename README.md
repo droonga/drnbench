@@ -14,7 +14,7 @@ It may be used for other HTTP servers (in future versions).
 Drnbench can benchmark performance of a Droonga Engine with random search requests.
 
 In this scenario, you have to prepare patterns of search queries for the "search" command.
-Drnbench will start multiple clients and send many requests of the "search" command based on the scenario.
+Drnbench will start multiple clients and send many requests of the "search" command based on the scenario, via fluentd protocol (msgpack).
 
  1. Create a patterns file in the format:
     
