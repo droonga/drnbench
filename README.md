@@ -84,7 +84,8 @@ Drnbench will start multiple clients and send many requests of the "search" comm
           ...
         }
     
- 2. Run drnbench with the scenario.
+ 2. Setup a Droonga Engine server. For example, localhost:3003.
+ 3. Run drnbench with the scenario.
     
         # cd ~/drnbench
         # RUBYLIB=lib/ bin/drnbench \
@@ -96,7 +97,8 @@ Drnbench will start multiple clients and send many requests of the "search" comm
             --request-patterns-file=/tmp/patterns.json \
             --host=localhost \
             --port=3003
- 3. You'll get a result like:
+    
+ 4. You'll get a result like:
     
         n_clients,total_n_requests,queries_per_second,min_elapsed_time,max_elapsed_time,average_elapsed_time,200
         1,33,3.3,0.164632187,0.164632187,0.19133309036363635,0
