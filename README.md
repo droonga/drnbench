@@ -9,12 +9,17 @@ It may be used for other HTTP servers (in future versions).
 
 ## How to run benchmark?
 
-### Benchmarking of a Droonga Engine instance.
+### Benchmarking of the "search" command, with a Droonga Engine instance
 
- 1. Prepare scenario file.
+Drnbench can benchmark performance of a Droonga Engine with random search requests.
+
+In this scenario, you have to prepare patterns of search queries for the "search" command.
+Drnbench will start multiple clients and send many requests of the "search" command based on the scenario.
+
+ 1. Create a patterns file in the format:
     
         {
-          "(scenario 1 name)": {
+          "(pattern type 1 name)": {
             "frequency": (appearance ratio in all requests),
             "patterns":  [
               { search queries 1 },
@@ -23,7 +28,7 @@ It may be used for other HTTP servers (in future versions).
               ...
             ]
           }
-          "(scenario 2 name)": {
+          "(patterns type 2 name)": {
             ...
           },
           ...
@@ -45,15 +50,38 @@ It may be used for other HTTP servers (in future versions).
                       "count",
                       "records"
                     ],
+                    "attributes": ["_key", "name", "age", "birhtday"],
                     "offset": 0,
-                    "limit":  100,
-                    "attributes": ["_key", "name", "age", "birhtday"]
+                    "limit":  100
                   }
                 }
               },
               ...
             ]
-          }
+          },
+          "item search": {
+            "frequency": 0.32,
+            "patterns": [
+              {
+                "users": {
+                  "source":    "Item",
+                  "condition": "visible == true",
+                  "sortBy":    { "keys": ["title"], "offset": 0, "limit": 100" },
+                  "output":    {
+                    "elements": [
+                      "count",
+                      "records"
+                    ],
+                    "attributes": ["title", "price"],
+                    "offset": 0,
+                    "limit":  100
+                  }
+                }
+              },
+              ...
+            ]
+          },
+          ...
         }
     
  2. Run drnbench with the scenario.
