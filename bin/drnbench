@@ -36,7 +36,7 @@ option_parser = OptionParser.new do |parser|
   end
 
   parser.on("--mode=MODE", String,
-            "mode of bencmark (optional)",
+            "mode of benchmark (optional)",
             "available modes:",
             "  http",
             "  http-droonga-search") do |mode|
