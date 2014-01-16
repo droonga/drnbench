@@ -22,14 +22,14 @@ module Drnbench
     attr_reader :port
 
     def initialize(params)
-      @engine => params[:engine]
+      @engine = params[:engine]
 
-      @host => params[:host] || "localhost"
-      @port => params[:port] || 3003
-      @receive_port => params[:receive_port] || 14224
-      @default_dataset => params[:default_dataset] || "Droonga"
+      @host = params[:host] || "localhost"
+      @port = params[:port] || 3003
+      @receive_port = params[:receive_port] || 14224
+      @default_dataset = params[:default_dataset] || "Droonga"
 
-      @application_dir => Pathname(params[:application_dir])
+      @application_dir = Pathname(params[:application_dir])
       @node = params[:node]
       @node_options = params[:node_options]
     end
