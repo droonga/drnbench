@@ -1,0 +1,107 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+require "drnbench"
+require "drnbench/server/configuration"
+require "optparse"
+
+engine_config = Drnbench::Server::EngineConfiguration.new
+protocol_adapter_config = Drnbench::Server::ProtocolAdapterConfiguration.new
+protocol_adapter_config.engine_config = engine_config
+
+options = {
+  :start_n_subscribers => 1000,
+  :n_publishings => 1000,
+  :n_steps => 10,
+  :timeout => 10,
+  :report_progressively => true,
+  :output_path => "/tmp/drnbench-publish-result.csv",
+
+  :subscribe_request => nil,
+  :feed => nil,
+}
+option_parser = OptionParser.new do |parser|
+  parser.on("--start-n-subscribers=N", Integer,
+            "initial number of subscribers") do |n_subscribers|
+    options[:start_n_subscribers] = n_subscribers
+  end
+  parser.on("--n-publishings=N", Integer,
+            "number of publish times") do |n_publishings|
+    options[:n_publishings] = n_publishings
+  end
+  parser.on("--n-steps=N", Integer,
+            "number of benchmark steps") do |n_steps|
+    options[:n_steps] = n_steps
+  end
+  parser.on("--timeout=SECONDS", Float,
+            "timeout for receiving") do |timeout|
+    options[:timeout] = timeout
+  end
+  parser.on("--output-path=PATH", String,
+            "path to the output CSV file") do |output_path|
+    options[:output_path] = output_path
+  end
+
+  parser.on("--subscribe-request=PATH", String,
+            "path to the file which defines a request to subscribe") do |path|
+    options[:subscribe_request] = path
+  end
+  parser.on("--feed=PATH", String,
+            "path to the file which defines a message feeded to the engine") do |path|
+    options[:feed] = path
+  end
+
+  parser.on("--protocol-adapter-port=PORT", Integer,
+            "port number for the Droonga Protocol Adapter which is used for clients") do |port|
+    protocol_adapter_config.port = port
+  end
+  parser.on("--protocol-adapter-receive-port=PORT", Integer,
+            "port number for the Droonga Protocol Adapter which is used for the engine") do |port|
+    protocol_adapter_config.receive_port = port
+  end
+  parser.on("--protocol-adapter-application-dir=PATH", String,
+            "path to the directory of the Droonga Protocol Adapter") do |path|
+    protocol_adapter_config.application_dir = path
+  end
+  parser.on("--node=PATH", String,
+            "path to the node.js executable") do |node|
+    protocol_adapter_config.node = node
+  end
+  parser.on("--node-options=OPTIONS",
+            "options for node.js",
+            "you can specify this option multiple times") do |options|
+    protocol_adapter_config.node_options = Shellwords.split(options)
+  end
+
+  parser.on("--engine-config-path=PATH", String,
+            "path to the configuration directory for Droonga Engine") do |path|
+    engine_config.engine_config_path = path
+  end
+  parser.on("--fluentd=PATH", String,
+            "path to the fluentd executable") do |fluentd|
+    engine_config.fluentd = fluentd
+  end
+  parser.on("--fluentd-options=OPTIONS",
+            "options for fluentd",
+            "you can specify this option multiple times") do |options|
+    engine_config.fluentd_options = Shellwords.split(options)
+  end
+end
+args = option_parser.parse!(ARGV)
+
+if options[:subscribe_request].nil?
+  raise "You must specify a message pattern to subscribe, by --subscribe-request option."
+end
+if options[:feed].nil?
+  raise "You must specify a message pattern to feed, by --feed option."
+end
+
+options[:engine_config] = engine_config
+options[:protocol_adapter_config] = protocol_adapter_config
+runner = Drnbench::Publish::GradualRunner.new(options)
+runner.run
+
+File.open(options[:output_path], "w") do |file|
+  file.puts runner.result.to_csv
+end
+puts "Statistics has been saved to #{options[:output_path]}"
