@@ -6,6 +6,16 @@ Drnbench is a benchmark tool for Droonga.
 
 It may be used for other HTTP servers.
 
+Drnbench provides features to send multiple random requests with different settings periodically.
+Number of clients (requests) in each period will be automatically increased gradually.
+So you'll be able to guess the limit performance of a system, via the report like following:
+
+    n_clients,total_n_requests,queries_per_second,min_elapsed_time,max_elapsed_time,average_elapsed_time,200
+    1,33,3.3,0.164632187,0.164632187,0.19133309036363635,0
+    2,70,7.0,0.161510877,0.161510877,0.1846983412285715,0
+    3,87,8.7,0.1658357,0.1658357,0.24303329366666668,0
+    ...
+
 
 ## How to run benchmark?
 
@@ -73,7 +83,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
         }
     
  2. Setup an HTTP server. For example, localhost:80.
- 4. Run drnbench with the pattern file.
+ 3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
         # RUBYLIB=lib/ bin/drnbench- \
@@ -87,13 +97,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
             --host=localhost \
             --port=80
     
- 5. You'll get a result like:
-    
-        n_clients,total_n_requests,queries_per_second,min_elapsed_time,max_elapsed_time,average_elapsed_time,200
-        1,33,3.3,0.164632187,0.164632187,0.19133309036363635,0
-        2,70,7.0,0.161510877,0.161510877,0.1846983412285715,0
-        3,87,8.7,0.1658357,0.1658357,0.24303329366666668,0
-        ...
+ 4. You'll get a report.
 
 
 ### Benchmarking of request-responsne style commands, with a Droonga-based search system
@@ -194,13 +198,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
             --host=localhost \
             --port=3003
     
- 5. You'll get a result like:
-    
-        n_clients,total_n_requests,queries_per_second,min_elapsed_time,max_elapsed_time,average_elapsed_time,200
-        1,33,3.3,0.164632187,0.164632187,0.19133309036363635,0
-        2,70,7.0,0.161510877,0.161510877,0.1846983412285715,0
-        3,87,8.7,0.1658357,0.1658357,0.24303329366666668,0
-        ...
+ 5. You'll get a report.
 
 
 ## License
