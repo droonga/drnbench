@@ -8,9 +8,6 @@ module Drnbench
   class HttpClient
     attr_reader :requests, :results, :wait
 
-    DEFAULT_PATH = "/"
-    DEFAULT_METHOD = "GET"
-
     def initialize(params)
       @requests = params[:requests]
       @result = params[:result]
@@ -18,8 +15,8 @@ module Drnbench
 
       @default_host = params[:default_host]
       @default_port = params[:default_port]
-      @default_path = params[:default_path] || DEFAULT_PATH
-      @default_method = params[:default_method] || DEFAULT_METHOD
+      @default_path = params[:default_path]
+      @default_method = params[:default_method]
     end
 
     def run

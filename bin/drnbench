@@ -12,6 +12,8 @@ options = {
   :mode => :http,
   :default_host => "localhost",
   :default_port => 80,
+  :default_path => "/",
+  :default_method => "GET",
   :report_progressively => true,
   :output_path => "/tmp/drnbench-result.csv",
 }
