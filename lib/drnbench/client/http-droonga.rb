@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 module Drnbench
-  class HttpDroongaSearchClient < HttpClient
-    DEFAULT_PATH = "/droonga/search"
+  class HttpDroongaClient < HttpClient
+    DEFAULT_PATH_BASE = "/droonga"
+    DEFAULT_COMMAND = "search"
     DEFAULT_METHOD = "POST"
 
     def initialize(params)
-      params[:path] ||= DEFAULT_PATH
-      params[:method] ||= DEFAULT_METHOD
+      @command = params[:command] || DEFAULT_COMMAND
       params[:requests] = populate_http_requests(params[:requests])
       super
     end
@@ -19,6 +19,7 @@ module Drnbench
           :body => {
             :queries => queries,
           },
+          :path => "#{DEFAULT_PATH_BASE}/#{@command}",
         }
       end
     end

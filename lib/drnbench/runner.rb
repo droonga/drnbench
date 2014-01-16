@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require "drnbench/client/http"
-require "drnbench/client/http-droonga-search"
+require "drnbench/client/http-droonga"
 require "drnbench/result"
 
 module Drnbench
@@ -52,8 +52,8 @@ module Drnbench
         case @params[:mode]
         when :http
           client = HttpClient.new(client_params)
-        when :http_droonga_search
-          client = HttpDroongaSearchClient.new(client_params)
+        when :http_droonga
+          client = HttpDroongaClient.new(client_params)
         end
         client.run
         client
