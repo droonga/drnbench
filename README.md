@@ -179,7 +179,8 @@ Drnbench will start multiple clients and send many requests based on the pattern
         }
     
  2. Setup a Droonga Engine server. For example, localhost:23003.
- 3. Run drnbench with the pattern file.
+ 3. Setup a Protocol Adapter server. For example, localhost:3003.
+ 4. Run drnbench with the pattern file.
     
         # cd ~/drnbench
         # RUBYLIB=lib/ bin/drnbench \
@@ -188,12 +189,12 @@ Drnbench will start multiple clients and send many requests based on the pattern
             --step=1 \
             --duration=10 \
             --wait=0.01 \
-            --mode=http-droonga
+            --mode=http-droonga \
             --request-patterns-file=/tmp/patterns.json \
             --host=localhost \
-            --port=23003
+            --port=3003
     
- 4. You'll get a result like:
+ 5. You'll get a result like:
     
         n_clients,total_n_requests,queries_per_second,min_elapsed_time,max_elapsed_time,average_elapsed_time,200
         1,33,3.3,0.164632187,0.164632187,0.19133309036363635,0
