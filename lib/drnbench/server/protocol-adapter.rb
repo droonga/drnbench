@@ -4,13 +4,13 @@ module Drnbench
   class ProtocolAdapter
     attr_reader :port
 
-    def initialize(params)
-      @engine = params[:engine]
+    def initialize(config)
+      @config = config
 
-      @host = params[:host] || "localhost"
-      @port = params[:port] || 3003
-      @receive_port = params[:receive_port] || 14224
-      @default_dataset = params[:default_dataset] || "Droonga"
+      @host = @config.host
+      @port = @config.port
+      @receive_port = @config.receive_port
+      @default_dataset = @config.default_dataset
 
       @application_dir = Pathname(params[:application_dir])
       @node = params[:node]

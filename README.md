@@ -251,15 +251,17 @@ Steps to run:
  2. Create a patterns file for messages to be feeded:
     
         {
-          "type": "(message type)",
-          "body": (message body)
+          "type":    "(message type)",
+          "dataset": "(dataset name)",
+          "body":    (message body)
         }
     
     For example, a file "watch-feed.json" like:
     
         {
-          "type": "watch.feed",
-          "body": {
+          "type":    "watch.feed",
+          "dataset": "Watch",
+          "body":    {
             "targets": {
               "body": "a content including the keyword"
             }
