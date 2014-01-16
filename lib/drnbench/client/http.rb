@@ -16,10 +16,10 @@ module Drnbench
       @result = params[:result]
       @wait = params[:wait]
 
-      @default_host = params[:host]
-      @default_port = params[:port]
-      @default_path = params[:path] || DEFAULT_PATH
-      @default_method = params[:method] || DEFAULT_METHOD
+      @default_host = params[:default_host]
+      @default_port = params[:default_port]
+      @default_path = params[:default_path] || DEFAULT_PATH
+      @default_method = params[:default_method] || DEFAULT_METHOD
     end
 
     def run

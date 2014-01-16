@@ -15,16 +15,11 @@ module Drnbench
     DEFAULT_N_CLIENTS = 1
     TOTAL_N_REQUESTS = 1000
 
-    DEFAULT_HOST = "localhost"
-    DEFAULT_PORT = 80
-
     def initialize(params)
       @duration = [params[:duration] || DEFAULT_DURATION, MIN_DURATION].max
       @n_clients = params[:n_clients] || DEFAULT_N_CLIENTS
       @n_requests = params[:n_requests] || TOTAL_N_REQUESTS
 
-      params[:host] ||= DEFAULT_HOST
-      params[:port] ||= DEFAULT_PORT
       params[:wait] ||= DEFAULT_WAIT
       params[:wait] = [params[:wait], MIN_WAIT].max
 

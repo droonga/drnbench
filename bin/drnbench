@@ -10,6 +10,8 @@ options = {
   :end_n_clients => 1,
   :step => 1,
   :mode => :http,
+  :default_host => "localhost",
+  :default_port => 80,
   :report_progressively => true,
   :output_path => "/tmp/drnbench-result.csv",
 }
@@ -47,21 +49,21 @@ option_parser = OptionParser.new do |parser|
     options[:request_patterns_file] = File.expand_path(path)
   end
 
-  parser.on("--host=HOST", String,
+  parser.on("--default-host=HOST", String,
             "default host name (optional)") do |host|
-    options[:host] = host
+    options[:default_host] = host
   end
-  parser.on("--port=PORT", Integer,
+  parser.on("--default-port=PORT", Integer,
             "default port number (optional)") do |port|
-    options[:port] = port
+    options[:default_port] = port
   end
-  parser.on("--path=PATH", String,
+  parser.on("--default-path=PATH", String,
             "default path (optional)") do |path|
-    options[:path] = path
+    options[:default_path] = path
   end
-  parser.on("--method=METHOD", String,
+  parser.on("--default-method=METHOD", String,
             "default HTTP method (optional)") do |method|
-    options[:method] = method
+    options[:default_method] = method
   end
 
   parser.on("--output-path=PATH",
