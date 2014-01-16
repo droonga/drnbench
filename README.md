@@ -203,30 +203,6 @@ Drnbench will start multiple clients and send many requests based on the pattern
         ...
 
 
-### Benchmarking of the "search" command, with a combination of a Droonga Protocol Adapter and a Droonga Engine.
-
-(Note: this feature is not implemented yet.)
-
- 1. Create a pattern file.
- 2. Setup a Droonga Engine server. For example, localhost:23003.
- 3. Setup a Protocol Adapter server. For example, localhost:3003.
- 4. Run drnbench with the pattern file and an extra option `--type=rest`.
-    
-        # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench \
-            --type=rest \
-            --start-n-clients=1 \
-            --end-n-clients=32 \
-            --step=1 \
-            --duration=10 \
-            --wait=0.01 \
-            --request-patterns-file=/tmp/patterns.json \
-            --host=localhost \
-            --port=3003
-    
- 4. You'll get a result.
-
-
 ## License
 
 The MIT License (MIT)
