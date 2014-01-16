@@ -16,6 +16,11 @@ So you'll be able to guess the limit performance of the throughput of a server, 
     3,87,8.7,0.1658357,0.1658357,0.24303329366666668,0
     ...
 
+Dronbench provides two commands, for different styles of benchmarked servers.
+
+ * `drnbench-shuttle`: benchmarks simple request-response style APIs.
+ * `drnbench-publish`: benchmarks publish-subscribe style (including HTTP streaming) APIs.
+   This command is not implemented yet.
 
 ## How to run benchmark?
 
@@ -23,7 +28,11 @@ So you'll be able to guess the limit performance of the throughput of a server, 
 
 Drnbench can benchmark throughput performance of an HTTP server with random requests.
 
-In this scenario, you have to setup an HTTP server and prepare patterns of requests.
+In this scenario, you have to do:
+
+ * setup an HTTP server.
+ * prepare patterns of requests.
+
 Drnbench will start multiple clients and send many requests based on the patterns file.
 
  1. Create a patterns file in the format:
@@ -104,7 +113,11 @@ Drnbench will start multiple clients and send many requests based on the pattern
 
 Drnbench can benchmark throughput performance of a Droonga-based search system with random requests.
 
-In this scenario, you have to setup a Droonga-based search system and prepare patterns of requests for commands.
+In this scenario, you have to do:
+
+ * setup a Droonga-based search system.
+ * prepare patterns of requests for commands.
+
 Drnbench will start multiple clients and send many requests based on the patterns file.
 
  1. Create a patterns file in the format:
