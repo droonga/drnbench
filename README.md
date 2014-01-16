@@ -9,22 +9,23 @@ It may be used for other HTTP servers (in future versions).
 
 ## How to run benchmark?
 
-### Benchmarking of the "search" command, with a Droonga Engine instance
+### Benchmarking of request-responsne style commands, with a Droonga Engine instance
 
-Drnbench can benchmark performance of a Droonga Engine with random search requests.
+Drnbench can benchmark performance of a Droonga Engine with random requests.
 
-In this scenario, you have to prepare patterns of search queries for the "search" command.
-Drnbench will start multiple clients and send many requests of the "search" command based on the scenario, via fluentd protocol (msgpack).
+In this scenario, you have to prepare patterns of requests for commands.
+Drnbench will start multiple clients and send many requests based on the patterns file, via fluentd protocol (msgpack).
 
  1. Create a patterns file in the format:
     
         {
           "(pattern type 1 name)": {
             "frequency": (appearance ratio in all requests),
+            "command":   "(command name)",
             "patterns":  [
-              { search queries 1 },
-              { search queries 2 },
-              { search queries 3 },
+              { command parameters 1 },
+              { command parameters 2 },
+              { command parameters 3 },
               ...
             ]
           }
@@ -39,20 +40,23 @@ Drnbench will start multiple clients and send many requests of the "search" comm
         {
           "user search": {
             "frequency": 0.61,
-            "patterns": [
+            "command":   "search",
+            "patterns":  [
               {
-                "users": {
-                  "source":    "User",
-                  "condition": "age >= 10",
-                  "sortBy":    { "keys": ["-birthday"], "offset": 0, "limit": 100" },
-                  "output":    {
-                    "elements": [
-                      "count",
-                      "records"
-                    ],
-                    "attributes": ["_key", "name", "age", "birhtday"],
-                    "offset": 0,
-                    "limit":  100
+                "queries": {
+                  "users": {
+                    "source":    "User",
+                    "condition": "age >= 10",
+                    "sortBy":    { "keys": ["-birthday"], "offset": 0, "limit": 100" },
+                    "output":    {
+                      "elements": [
+                        "count",
+                        "records"
+                      ],
+                      "attributes": ["_key", "name", "age", "birhtday"],
+                      "offset": 0,
+                      "limit":  100
+                    }
                   }
                 }
               },
@@ -61,20 +65,23 @@ Drnbench will start multiple clients and send many requests of the "search" comm
           },
           "item search": {
             "frequency": 0.32,
-            "patterns": [
+            "command":   "search",
+            "patterns":  [
               {
-                "users": {
-                  "source":    "Item",
-                  "condition": "visible == true",
-                  "sortBy":    { "keys": ["title"], "offset": 0, "limit": 100" },
-                  "output":    {
-                    "elements": [
-                      "count",
-                      "records"
-                    ],
-                    "attributes": ["title", "price"],
-                    "offset": 0,
-                    "limit":  100
+                "queries": {
+                  "users": {
+                    "source":    "Item",
+                    "condition": "visible == true",
+                    "sortBy":    { "keys": ["title"], "offset": 0, "limit": 100" },
+                    "output":    {
+                      "elements": [
+                        "count",
+                        "records"
+                      ],
+                      "attributes": ["title", "price"],
+                      "offset": 0,
+                      "limit":  100
+                    }
                   }
                 }
               },
@@ -94,6 +101,7 @@ Drnbench will start multiple clients and send many requests of the "search" comm
             --step=1 \
             --duration=10 \
             --wait=0.01 \
+            --mode=http-droonga
             --request-patterns-file=/tmp/patterns.json \
             --host=localhost \
             --port=23003
