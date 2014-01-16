@@ -214,6 +214,74 @@ Drnbench will start multiple clients and send many requests based on the pattern
  5. You'll get a report.
 
 
+### Benchmarking of HTTP streaming APIs, with a Droonga-based search system
+
+Dronbench can benchmark an HTTP streaming API based on a publish-subscribe command.
+
+In this scenario, you have to do:
+
+ * prepare configuration files "fluentd.conf" and "catalog.json" for a Droonga Engine.
+ * prepare an express application works as a Droonga Protocol Adapter.
+ * prepare pattern files for subscribe request and feeded data.
+
+Drnbench will run benchmark like:
+
+ 1. Prepare subscribers.
+ 2. Send "feed" messages to the Droonga Engine.
+    All subscribers will receive all published messages.
+ 3. Increase the number of subscribers.
+ 4. Repeat 2, 3, and 4.
+
+Steps to run:
+
+ 1. Create a patterns file for a subscribe request:
+    
+        {
+          "path":   "/path/to/endpoint",
+          "method": "HTTP method",
+          "body":   (sent as the request body)
+        }
+    
+    For example, a file "watch-subscribe.json" like:
+    
+        {
+          "path": "/droonga/watch-streaming?=keyword"
+        }
+    
+ 2. Create a patterns file for messages to be feeded:
+    
+        {
+          "type": "(message type)",
+          "body": (message body)
+        }
+    
+    For example, a file "watch-feed.json" like:
+    
+        {
+          "type": "watch.feed",
+          "body": {
+            "targets": {
+              "body": "a content including the keyword"
+            }
+          }
+        }
+    
+ 3. Run drnbench with the pattern file.
+    
+        # cd ~/drnbench
+        # RUBYLIB=lib/ bin/drnbench-publish \
+            --start-n-subscribers=1000 \
+            --n-publishings=1000 \
+            --n-steps=10 \
+            --timeout=5 \
+            --subscribe-request=/tmp/watch-subscribe.json \
+            --feed=/tmp/watch-feed.json \
+            --protocol-adapter-port=80 \
+            --engine-config-path=/tmp/engine/
+    
+ 4. You'll get a report.
+
+
 ## License
 
 The MIT License (MIT)
