@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_runtime_dependency("json")
+  spec.add_runtime_dependency("drntest")
 
   spec.add_development_dependency("bundler")
   spec.add_development_dependency("rake")
