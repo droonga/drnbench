@@ -8,7 +8,7 @@ It may be used for other HTTP servers.
 
 Drnbench provides features to send multiple random requests with different settings periodically.
 Number of clients (requests) in each period will be automatically increased gradually.
-So you'll be able to guess the limit performance of a system, via the report like following:
+So you'll be able to guess the limit performance of the throughput of a server, via the report like following:
 
     n_clients,total_n_requests,queries_per_second,min_elapsed_time,max_elapsed_time,average_elapsed_time,200
     1,33,3.3,0.164632187,0.164632187,0.19133309036363635,0
@@ -21,7 +21,7 @@ So you'll be able to guess the limit performance of a system, via the report lik
 
 ### Benchmarking with an HTTP server
 
-Drnbench can benchmark performance of an HTTP server with random requests.
+Drnbench can benchmark throughput performance of an HTTP server with random requests.
 
 In this scenario, you have to setup an HTTP server and prepare patterns of requests.
 Drnbench will start multiple clients and send many requests based on the patterns file.
@@ -102,7 +102,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
 
 ### Benchmarking of request-responsne style commands, with a Droonga-based search system
 
-Drnbench can benchmark performance of a Droonga-based search system with random requests.
+Drnbench can benchmark throughput performance of a Droonga-based search system with random requests.
 
 In this scenario, you have to setup a Droonga-based search system and prepare patterns of requests for commands.
 Drnbench will start multiple clients and send many requests based on the patterns file.
