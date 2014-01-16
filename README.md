@@ -86,7 +86,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench- \
+        # RUBYLIB=lib/ bin/drnbench-shuttle \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -187,7 +187,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  4. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench \
+        # RUBYLIB=lib/ bin/drnbench-shuttle \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
