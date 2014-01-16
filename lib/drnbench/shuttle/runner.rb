@@ -2,9 +2,10 @@
 
 require "drnbench/client/http"
 require "drnbench/client/http-droonga"
-require "drnbench/result"
+require "drnbench/shuttle/result"
 
 module Drnbench
+module Shuttle
   class Runner
     attr_reader :duration, :n_clients, :result
 
@@ -109,4 +110,5 @@ module Drnbench
       end
     end
   end
+end
 end

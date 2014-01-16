@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-require "drnbench/runner"
+require "drnbench/shuttle/runner"
 require "csv"
 
 module Drnbench
+module Shuttle
   class GradualRunner
     attr_reader :start_n_clients, :end_n_clients, :step
     attr_reader :report_progressively, :result
@@ -86,4 +87,5 @@ module Drnbench
       end
     end
   end
+end
 end

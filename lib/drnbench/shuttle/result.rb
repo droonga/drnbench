@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module Drnbench
+module Shuttle
   class Result
     attr_reader :n_clients, :duration, :statuses
 
@@ -109,4 +110,5 @@ module Drnbench
       status_percentages
     end
   end
+end
 end
