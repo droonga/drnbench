@@ -76,7 +76,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  4. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench \
+        # RUBYLIB=lib/ bin/drnbench- \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -207,6 +207,6 @@ Drnbench will start multiple clients and send many requests based on the pattern
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Droonga Project
+Copyright (c) 2013-2014 Droonga Project
 
 See LICENSE.txt for details.
