@@ -16,7 +16,7 @@ So you'll be able to guess the limit performance of the throughput of a server, 
     3,87,8.7,0.1658357,0.1658357,0.24303329366666668,0
     ...
 
-Dronbench provides two commands, for different styles of benchmarked servers.
+Drnbench provides two commands, for different styles of benchmarked servers.
 
  * `drnbench-shuttle`: benchmarks simple request-response style APIs.
  * `drnbench-publish`: benchmarks publish-subscribe style (including HTTP streaming) APIs.
@@ -216,7 +216,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
 
 ### Benchmarking of HTTP streaming APIs, with a Droonga-based search system
 
-Dronbench can benchmark an HTTP streaming API based on a publish-subscribe command.
+Drnbench can benchmark an HTTP streaming API based on a publish-subscribe command.
 
 In this scenario, you have to do:
 
