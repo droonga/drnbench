@@ -6,19 +6,10 @@ require "csv"
 module Drnbench
   module Shuttle
     class GradualRunner
-      attr_reader :start_n_clients, :end_n_clients, :step
       attr_reader :report_progressively, :result
 
-      DEFAULT_START_N_CLIENTS = 1
-      DEFAULT_END_N_CLIENTS = 1
-      DEFAULT_STEP = 1
-
-      def initialize(params)
-        @start_n_clients = params[:start_n_clients] || DEFAULT_START_N_CLIENTS
-        @end_n_clients = params[:end_n_clients] || DEFAULT_END_N_CLIENTS
-        @step = params[:step] || DEFAULT_STEP
-        @report_progressively = params[:report_progressively] || false
-        @params = params
+      def initialize(config)
+        @config = config
       end
 
       def run
@@ -29,13 +20,13 @@ module Drnbench
       private
       def run_benchmarks
         @result = Result.new
-        @start_n_clients.step(@end_n_clients, @step) do |n_clients|
-          benchmark = Runner.new(@params.merge(:n_clients => n_clients))
-          if @report_progressively
+        @config.start_n_clients.step(@config.end_n_clients, @config.step) do |n_clients|
+          benchmark = Runner.new(n_clients, @config)
+          if @config.report_progressively
             puts "Running benchmark with #{n_clients} clients..."
           end
           benchmark.run
-          if @report_progressively
+          if @config.report_progressively
             puts benchmark.result.to_s
           end
           @result << benchmark.result

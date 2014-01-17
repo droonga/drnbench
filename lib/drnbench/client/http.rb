@@ -8,26 +8,17 @@ module Drnbench
   class HttpClient
     attr_reader :requests, :results, :wait
 
-    def initialize(params)
+    def initialize(params, config)
       @requests = params[:requests]
-      @result = params[:result]
-      @wait = params[:wait]
-
-      @default_host = params[:default_host]
-      @default_port = params[:default_port]
-      @default_path = params[:default_path]
-      @default_method = params[:default_method]
+      @result   = params[:result]
+      @config   = config
     end
 
     def run
       @thread = Thread.new do
         loop do
           request = @requests.pop
-          request[:host] ||= @default_host
-          request[:port] ||= @default_port
-          request[:path] ||= @default_path
-          request[:method] ||= @default_method
-          request[:method] = request[:method].upcase
+          fixup_request(request)
 
           Net::HTTP.start(request[:host], request[:port]) do |http|
             header = {
@@ -51,7 +42,7 @@ module Drnbench
               :elapsed_time => Time.now - start_time,
             }
           end
-          sleep @wait
+          sleep @config.wait
         end
       end
       self
@@ -59,6 +50,16 @@ module Drnbench
 
     def stop
       @thread.exit
+    end
+
+    private
+    def fixup_request(request)
+      request[:host] ||= @config.default_host
+      request[:port] ||= @config.default_port
+      request[:path] ||= @config.default_path
+      request[:method] ||= @config.default_method
+      request[:method] = request[:method].upcase
+      request
     end
   end
 end

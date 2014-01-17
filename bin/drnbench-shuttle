@@ -5,38 +5,27 @@ require "drnbench"
 require "optparse"
 require "json"
 
-options = {
-  :start_n_clients => 1,
-  :end_n_clients => 1,
-  :step => 1,
-  :mode => :http,
-  :default_host => "localhost",
-  :default_port => 80,
-  :default_path => "/",
-  :default_method => "GET",
-  :report_progressively => true,
-  :output_path => "/tmp/drnbench-result.csv",
-}
+config = Drnbench::Shuttle::Configuration.new
 option_parser = OptionParser.new do |parser|
   parser.on("--duration=SECONDS", Float,
             "duration of the benmark") do |duration|
-    options[:duration] = duration
+    config.duration = duration
   end
   parser.on("--wait=SECONDS", Float,
             "wait for each request") do |wait|
-    options[:wait] = wait
+    config.wait = wait
   end
   parser.on("--start-n-clients=N", Integer,
             "initial number of clients (optional)") do |n_clients|
-    options[:start_n_clients] = n_clients
+    config.start_n_clients = n_clients
   end
   parser.on("--end-n-clients=N", Integer,
             "final number of clients (optional)") do |n_clients|
-    options[:end_n_clients] = n_clients
+    config.end_n_clients = n_clients
   end
   parser.on("--step=COUNT", Integer,
             "step to increase number of clients (optional)") do |step|
-    options[:step] = step
+    config.step = step
   end
 
   parser.on("--mode=MODE", String,
@@ -44,53 +33,43 @@ option_parser = OptionParser.new do |parser|
             "available modes:",
             "  http",
             "  http-droonga-search") do |mode|
-    options[:mode] = mode.gsub(/-/, "_")
+    config.mode = mode.gsub(/-/, "_")
   end
   parser.on("--request-patterns-file=PATH",
             "path to request patterns JSON file") do |path|
-    options[:request_patterns_file] = File.expand_path(path)
+    config.request_patterns_file = File.expand_path(path)
   end
 
   parser.on("--default-host=HOST", String,
             "default host name (optional)") do |host|
-    options[:default_host] = host
+    config.default_host = host
   end
   parser.on("--default-port=PORT", Integer,
             "default port number (optional)") do |port|
-    options[:default_port] = port
+    config.default_port = port
   end
   parser.on("--default-path=PATH", String,
             "default path (optional)") do |path|
-    options[:default_path] = path
+    config.default_path = path
   end
   parser.on("--default-method=METHOD", String,
             "default HTTP method (optional)") do |method|
-    options[:default_method] = method
+    config.default_method = method
   end
 
   parser.on("--output-path=PATH",
             "path to output statistics as a CSV file (optional)") do |path|
-    options[:output_path] = File.expand_path(path)
+    config.output_path = File.expand_path(path)
   end
 end
 args = option_parser.parse!(ARGV)
 
-if options[:duration].nil?
-  raise "You must specify the test duration by --duration option."
-end
-if options[:request_patterns_file].nil?
-  raise "You must specify the path to the request patterns JSON file " +
-          "by --request-patterns-file option."
-end
+config.validate
 
-request_patterns = File.read(options[:request_patterns_file])
-request_patterns = JSON.parse(request_patterns, :symbolize_names => true)
-options[:request_patterns] = request_patterns
-
-runner = Drnbench::Shuttle::GradualRunner.new(options)
+runner = Drnbench::Shuttle::GradualRunner.new(config)
 runner.run
 
-File.open(options[:output_path], "w") do |file|
+File.open(config.output_path, "w") do |file|
   file.puts runner.result.to_csv
 end
-puts "Statistics has been saved to #{options[:output_path]}"
+puts "Statistics has been saved to #{config.output_path}"

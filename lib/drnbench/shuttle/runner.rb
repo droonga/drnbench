@@ -7,31 +7,11 @@ require "drnbench/shuttle/result"
 module Drnbench
   module Shuttle
     class Runner
-      attr_reader :duration, :n_clients, :result
+      attr_reader :n_clients, :result
 
-      MIN_DURATION = 1
-      DEFAULT_DURATION = 10
-      MIN_WAIT = 0
-      DEFAULT_WAIT = 1
-      DEFAULT_N_CLIENTS = 1
-      TOTAL_N_REQUESTS = 1000
-
-      def initialize(params)
-        @duration = [params[:duration] || DEFAULT_DURATION, MIN_DURATION].max
-        @n_clients = params[:n_clients] || DEFAULT_N_CLIENTS
-        @n_requests = params[:n_requests] || TOTAL_N_REQUESTS
-
-        params[:wait] ||= DEFAULT_WAIT
-        params[:wait] = [params[:wait], MIN_WAIT].max
-
-        @params = params
-
-        if params[:request_pattern]
-          params[:request_pattern][:frequency] = 1
-          @request_patterns = [params[:request_pattern]]
-        else
-          @request_patterns = params[:request_patterns]
-        end
+      def initialize(n_clients, config)
+        @n_clients = n_clients
+        @config = config
         populate_requests
       end
 
@@ -44,24 +24,26 @@ module Drnbench
       def process_requests
         requests_queue = Queue.new
         @result = Result.new(:n_clients => @n_clients,
-                             :duration => @duration)
+                             :duration => @config.duration)
 
-        client_params = @params.merge(:requests => requests_queue,
-                                      :result => @result)
+        client_params = {
+          :requests => requests_queue,
+          :result   => @result,
+        }
         @clients = @n_clients.times.collect do |index|
           client = nil
-          case @params[:mode]
+          case @config.mode
           when :http
-            client = HttpClient.new(client_params)
+            client = HttpClient.new(client_params, @config)
           when :http_droonga
-            client = HttpDroongaClient.new(client_params)
+            client = HttpDroongaClient.new(client_params, @config)
           end
           client.run
           client
         end
 
         start_time = Time.now
-        while Time.now - start_time < @duration
+        while Time.now - start_time < @config.duration
           if requests_queue.empty?
             @requests.each do |request|
               requests_queue.push(request)
@@ -80,12 +62,12 @@ module Drnbench
       def populate_requests
         @requests = []
 
-        if @request_patterns.is_a?(Array)
-          @request_patterns.each do |request_pattern|
+        if @config.request_patterns.is_a?(Array)
+          @config.request_patterns.each do |request_pattern|
             populate_request_pattern(request_pattern)
           end
         else
-          @request_patterns.each do |key, request_pattern|
+          @config.request_patterns.each do |key, request_pattern|
             populate_request_pattern(request_pattern)
           end
         end
@@ -95,7 +77,7 @@ module Drnbench
 
       def populate_request_pattern(request_pattern)
         frequency = request_pattern[:frequency].to_f
-        n_requests = @n_requests * frequency
+        n_requests = @config.n_requests * frequency
 
         base_patterns = nil
         if request_pattern[:pattern]
