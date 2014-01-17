@@ -1,7 +1,7 @@
 require "droonga/watch_schema"
 
 module Drnbench
-  module Publish
+  module PublishSubscribe
     class Watch
       class << self
         def command

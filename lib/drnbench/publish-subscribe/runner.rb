@@ -8,7 +8,7 @@ require "drnbench/server/engine"
 require "drnbench/server/protocol-adapter"
 
 module Drnbench
-  module Publish
+  module PublishSubscribe
     class Runner
       attr_reader :n_subscribers
 

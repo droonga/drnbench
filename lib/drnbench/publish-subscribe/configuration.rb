@@ -1,7 +1,7 @@
 require "drnbench/server/configuration"
 
 module Drnbench
-  module Publish
+  module PublishSubscribe
     class Configuration
       attr_accessor :start_n_subscribers, :n_publishings, :n_steps, :timeout
       attr_accessor :subscribe_request_file, :feed_file, :engine, :protocol_adapter
@@ -14,7 +14,7 @@ module Drnbench
         @timeout              = 10
 
         @report_progressively = true
-        @output_path          = "/tmp/drnbench-publish-result.csv"
+        @output_path          = "/tmp/drnbench-pubsub-result.csv"
 
         @engine           = Server::EngineConfiguration.new
         @protocol_adapter = Server::ProtocolAdapterConfiguration.new

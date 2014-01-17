@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-require "drnbench/shuttle/runner"
+require "drnbench/request-response/runner"
 require "csv"
 
 module Drnbench
-  module Shuttle
+  module RequestResponse
     class GradualRunner
       attr_reader :report_progressively, :result
 

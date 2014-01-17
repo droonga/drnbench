@@ -4,7 +4,7 @@ require "benchmark"
 require "csv"
 
 module Drnbench
-  module Publish
+  module PublishSubscribe
     class GradualRunner
       attr_reader :total_results
 

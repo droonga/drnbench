@@ -2,10 +2,10 @@
 
 require "drnbench/client/http"
 require "drnbench/client/http-droonga"
-require "drnbench/shuttle/result"
+require "drnbench/request-response/result"
 
 module Drnbench
-  module Shuttle
+  module RequestResponse
     class Runner
       attr_reader :n_clients, :result
 

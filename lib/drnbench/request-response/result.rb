@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 module Drnbench
-  module Shuttle
+  module RequestResponse
     class Result
       attr_reader :n_clients, :duration, :statuses
 

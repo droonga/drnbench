@@ -18,8 +18,8 @@ So you'll be able to guess the limit performance of the throughput of a server, 
 
 Drnbench provides two commands, for different styles of benchmarked servers.
 
- * `drnbench-shuttle`: benchmarks simple request-response style APIs.
- * `drnbench-publish`: benchmarks publish-subscribe style (including HTTP streaming) APIs.
+ * `drnbench-reqrep`: benchmarks simple request-response style APIs.
+ * `drnbench-pubsub`: benchmarks publish-subscribe style (including HTTP streaming) APIs.
    This command is not implemented yet.
 
 ## How to run benchmark?
@@ -95,7 +95,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-shuttle \
+        # RUBYLIB=lib/ bin/drnbench-reqrep \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -200,7 +200,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  4. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-shuttle \
+        # RUBYLIB=lib/ bin/drnbench-reqrep \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -271,13 +271,13 @@ Steps to run:
  3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-publish \
+        # RUBYLIB=lib/ bin/drnbench-pubsub \
             --start-n-subscribers=1000 \
             --n-publishings=1000 \
             --n-steps=10 \
             --timeout=5 \
-            --subscribe-request=/tmp/watch-subscribe.json \
-            --feed=/tmp/watch-feed.json \
+            --subscribe-request-file=/tmp/watch-subscribe.json \
+            --feed-file=/tmp/watch-feed.json \
             --protocol-adapter-port=80 \
             --engine-config-path=/tmp/engine/
     

@@ -4,7 +4,7 @@
 require "drnbench"
 require "optparse"
 
-config = Drnbench::Publish::Configuration.new
+config = Drnbench::PublishSubscribe::Configuration.new
 option_parser = OptionParser.new do |parser|
   parser.on("--start-n-subscribers=N", Integer,
             "initial number of subscribers") do |n_subscribers|
@@ -27,13 +27,13 @@ option_parser = OptionParser.new do |parser|
     config.output_path = output_path
   end
 
-  parser.on("--subscribe-request=PATH", String,
+  parser.on("--subscribe-request-file=PATH", String,
             "path to the file which defines a request to subscribe") do |path|
-    config.subscribe_request = path
+    config.subscribe_request_file = path
   end
-  parser.on("--feed=PATH", String,
+  parser.on("--feed-file=PATH", String,
             "path to the file which defines a message feeded to the engine") do |path|
-    config.feed = path
+    config.feed_file = path
   end
 
   parser.on("--protocol-adapter-port=PORT", Integer,
@@ -76,7 +76,7 @@ args = option_parser.parse!(ARGV)
 
 config.validate
 
-runner = Drnbench::Publish::GradualRunner.new(config)
+runner = Drnbench::PublishSubscribe::GradualRunner.new(config)
 runner.run
 
 File.open(@config.output_path, "w") do |file|

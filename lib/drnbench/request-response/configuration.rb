@@ -1,5 +1,5 @@
 module Drnbench
-  module Shuttle
+  module RequestResponse
     class Configuration
       attr_accessor :duration, :wait, :request_patterns_file
       attr_accessor :start_n_clients, :end_n_clients, :step, :n_requests
