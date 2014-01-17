@@ -12,34 +12,22 @@ module Drnbench
     class Runner
       attr_reader :n_subscribers
 
-      def initialize(params)
-        @params = params || {}
-
-        @n_publishings = params[:n_publishings] || 0
-        @timeout = params[:timeout] || 0
-
-        subscribe_request_file = @params[:subscribe_request]
-        subscribe_request_file = Pathname(subscribe_request_file).expand_path(Dir.pwd)
-        @subscribe_request = JSON.parse(subscribe_request_file.read, :symbolize_names => true)
-
-        feed_file = @params[:feed]
-        feed_file = Pathname(feed_file).expand_path(Dir.pwd)
-        @feed = JSON.parse(feed_file.read, :symbolize_names => true)
+      def initialize(config)
+        @config = config
 
         @n_subscribers = 0
 
         @feeder = Droonga::Client.new(tag: "droonga", port: 23003)
 
-        @server_config = @params[:server_config]
         setup_server
         setup_initial_subscribers
       end
 
       def setup_server
-        @engine = Engine.new(@config.engine_config)
+        @engine = Engine.new(@config.engine)
         @engine.start
 
-        @protocol_adapter = ProtocolAdapter.new(@config.protocol_adapter_config)
+        @protocol_adapter = ProtocolAdapter.new(@config.protocol_adapter)
         @protocol_adapter.start
       end
 
@@ -49,16 +37,16 @@ module Drnbench
       end
 
       def setup_initial_subscribers
-        add_subscribers(@params[:start_n_subscribers])
+        add_subscribers(@config.start_n_subscribers)
       end
 
       def run
-        @n_publishings.times do |index|
+        @config.n_publishings.times do |index|
           do_feed
         end
 
         published_messages = []
-        while published_messages.size != @n_publishings
+        while published_messages.size != @config.n_publishings
           published_messages << @receiver.new_message
         end
 
@@ -77,7 +65,7 @@ module Drnbench
       end
 
       def do_feed
-        message = Marshal.load(Marshal.dump(@feed))
+        message = @config.new_feed
         message[:id]         = Time.now.to_f.to_s,
         message[:date]       = Time.now
         message[:statusCode] = 200
