@@ -18,8 +18,8 @@ So you'll be able to guess the limit performance of the throughput of a server, 
 
 Drnbench provides two commands, for different styles of benchmarked servers.
 
- * `drnbench-reqrep`: benchmarks simple request-response style APIs.
- * `drnbench-pubsub`: benchmarks publish-subscribe style (including HTTP streaming) APIs.
+ * `drnbench-request-response`: benchmarks simple request-response style APIs.
+ * `drnbench-publish-subscribe`: benchmarks publish-subscribe style (including HTTP streaming) APIs.
    This command is not implemented yet.
 
 ## How to run benchmark?
@@ -95,7 +95,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-reqrep \
+        # RUBYLIB=lib/ bin/drnbench-request-response \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -200,7 +200,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  4. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-reqrep \
+        # RUBYLIB=lib/ bin/drnbench-request-response \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -271,7 +271,7 @@ Steps to run:
  3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-pubsub \
+        # RUBYLIB=lib/ bin/drnbench-publish-subscribe \
             --start-n-subscribers=1000 \
             --n-publishings=1000 \
             --n-steps=10 \
