@@ -16,7 +16,7 @@ module Drnbench
         @config = config
 
         @subscribers = []
-        @published_messages = []
+        @published_messages = Queue.new
 
         @feeder = Droonga::Client.new(:tag => @config.engine.tag,
                                       :host => @config.engine.host,
@@ -44,13 +44,16 @@ module Drnbench
       end
 
       def run
-        @config.n_publishings.times do |index|
+        publishing_times = @config.n_publishings.times
+        n_will_be_published_messages = @subscribers.size * publishing_times
+        publishing_times do |index|
           do_feed
         end
 
         published_messages = []
-        while published_messages.size != @config.n_publishings
-          published_messages << @receiver.new_message
+        n_will_be_published_messages.do
+          # we should implement "timeout" for too slow cases
+          published_messages << @published_messages.pop
         end
 
         teardown_server
@@ -63,8 +66,8 @@ module Drnbench
           client = Droonga::Client.new(:protocol => :http,
                                        :host => @config.protocol_adapter.host,
                                        :port => @config.protocol_adapter.port)
-          client.subscribe(message) do |object|
-            @published_messages << object
+          client.subscribe(message) do |published_message|
+            @published_messages.push(published_message)
           end
           @subscribers << client
         end
