@@ -1,0 +1,32 @@
+{
+  "effective_date": "2013-09-01T00:00:00Z",
+  "zones": ["localhost:23003/droonga"],
+  "farms": {
+    "localhost:23003/droonga": {
+      "device": ".",
+      "capacity": 10
+    }
+  },
+  "datasets": {
+    "Watch": {
+      "workers": 2,
+      "plugins": ["search", "groonga", "add", "watch"],
+      "number_of_replicas": 1,
+      "number_of_partitions": 1,
+      "partition_key": "_key",
+      "date_range": "infinity",
+      "ring": {
+        "localhost:23041": {
+          "weight": 50,
+          "partitions": {
+            "2013-09-01": [
+              "localhost:23003/droonga.watch"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "options": {
+  }
+}
