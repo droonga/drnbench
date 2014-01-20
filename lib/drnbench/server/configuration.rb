@@ -1,7 +1,7 @@
 module Drnbench
   module Server
     class EngineConfiguration
-      attr_accessor :host, :port, :tag,
+      attr_accessor :host, :port, :tag
       attr_accessor :base_path, :engine_config_path
       attr_accessor :fluentd, :fluentd_options
 
