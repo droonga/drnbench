@@ -33,7 +33,7 @@ module Drnbench
     def setup
       command = [
         @node,
-        application_file,
+        application_file.to_s,
         *@node_options,
       ]
       env = {
