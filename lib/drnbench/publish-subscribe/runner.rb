@@ -3,6 +3,7 @@
 require "json"
 require "yajl"
 require "pathname"
+require "progressbar"
 require "droonga/client"
 require "drnbench/server/engine"
 require "drnbench/server/protocol-adapter"
@@ -61,6 +62,7 @@ module Drnbench
       end
 
       def add_subscribers(n_subscribers)
+        prpgressbar = ProgressBar.new("adding subscribers", n_subscribers, STDERR)
         n_subscribers.times do |index|
           message = @config.new_subscribe_request
           client = Droonga::Client.new(:protocol => :http,
@@ -70,7 +72,9 @@ module Drnbench
             @published_messages.push(published_message)
           end
           @subscribers << client
+          prpgressbar.inc
         end
+        prpgressbar.finish
       end
 
       def do_feed
