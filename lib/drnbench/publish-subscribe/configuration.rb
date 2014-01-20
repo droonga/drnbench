@@ -25,7 +25,7 @@ module Drnbench
         if @subscribe_request_file.nil?
           raise ArgumentError.new("You must specify a JSON file for a message pattern to subscribe.")
         end
-        if @feed_file_file.nil?
+        if @feed_file.nil?
           raise ArgumentError.new("You must specify a JSON file for a message pattern to feed.")
         end
       end
