@@ -37,7 +37,7 @@ module Drnbench
         *@node_options,
       ]
       env = {
-        "DROONGA_ENGINE_DEFAULT_DATASEt" => @default_dataset,
+        "DROONGA_ENGINE_DEFAULT_DATASET" => @default_dataset,
         "DROONGA_ENGINE_HOST"            => @config.engine.host,
         "DROONGA_ENGINE_PORT"            => @config.engine.port,
         "DROONGA_ENGINE_TAG"             => @config.engine.tag,
