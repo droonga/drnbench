@@ -25,12 +25,13 @@ module Drnbench
     end
 
     class ProtocolAdapterConfiguration
-      attr_accessor :application_dir, :port, :receive_port, :default_dataset
+      attr_accessor :application_dir, :host, :port, :receive_port, :default_dataset
       attr_accessor :node, :node_options
       attr_accessor :engine
 
       def initialize
         @application_dir = Pathname(Dir.pwd)
+        @host            = "localhost"
         @port            = 80
         @receive_port    = 14224
         @default_dataset = "Droonga"
