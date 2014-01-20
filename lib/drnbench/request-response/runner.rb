@@ -37,6 +37,8 @@ module Drnbench
             client = HttpClient.new(client_params, @config)
           when :http_droonga
             client = HttpDroongaClient.new(client_params, @config)
+          else
+            raise ArgumentError.new("Unknown mode: #{@config.mode}")
           end
           client.run
           client
