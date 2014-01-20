@@ -3,7 +3,6 @@
 
 require "drnbench"
 require "optparse"
-require "json"
 
 config = Drnbench::RequestResponse::Configuration.new
 option_parser = OptionParser.new do |parser|

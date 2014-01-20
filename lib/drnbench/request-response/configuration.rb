@@ -1,3 +1,5 @@
+require "json"
+
 module Drnbench
   module RequestResponse
     class Configuration
