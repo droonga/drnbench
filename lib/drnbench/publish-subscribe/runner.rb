@@ -56,7 +56,7 @@ module Drnbench
       end
 
       def add_subscribers(n_subscribers)
-        progressbar = ProgressBar.new("adding subscribers", n_subscribers, STDERR)
+        progressbar = ProgressBar.new("subscribe", n_subscribers, STDERR)
         n_subscribers.times do |index|
           message = @config.new_subscribe_request
           client = Droonga::Client.new(:protocol => :http,
@@ -89,7 +89,7 @@ module Drnbench
       end
 
       def receive_messages(count)
-        progressbar = ProgressBar.new("received messages", count, STDERR)
+        progressbar = ProgressBar.new("received", count, STDERR)
         published_messages = []
         count.times do
           # we should implement "timeout" for too slow cases
