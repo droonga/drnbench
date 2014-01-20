@@ -9,24 +9,16 @@ module Drnbench
     def initialize(params, config)
       super
       @command = params["command"] || DEFAULT_COMMAND
-      @requests = populate_http_requests(@requests)
     end
 
     private
-    def populate_http_requests(requests)
-      requests.collect do |queries|
-        {
-          "body" => {
-            "queries" => queries,
-          },
-        }
-      end
-    end
-
     def fixup_request(request)
-      reqyest["path"]   ||= "#{DEFAULT_PATH_BASE}/#{@command}"
+      request = {
+        "body" => request,
+      }
+      request["path"]   ||= "#{DEFAULT_PATH_BASE}/#{@command}"
       request["method"] ||= DEFAULT_METHOD
-      super
+      super(request)
     end
   end
 end

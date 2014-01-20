@@ -18,7 +18,7 @@ module Drnbench
       @thread = Thread.new do
         loop do
           request = @requests.pop
-          fixup_request(request)
+          request = fixup_request(request)
 
           Net::HTTP.start(request["host"], request["port"]) do |http|
             header = {
