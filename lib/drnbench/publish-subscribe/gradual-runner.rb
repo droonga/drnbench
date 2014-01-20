@@ -16,8 +16,8 @@ module Drnbench
       def run
         results = []
         @config.n_steps.times do |try_count|
-          @runner.add_subscribers(@runner.n_subscribers) if try_count > 0
-          label = "#{@runner.n_subscribers} subscribers"
+          @runner.add_subscribers(@runner.subscribers.size) if try_count > 0
+          label = "#{@runner.subscribers.size} subscribers"
           percentage = nil
           result = Benchmark.bm do |benchmark|
             benchmark.report(label) do

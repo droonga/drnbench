@@ -10,14 +10,17 @@ require "drnbench/server/protocol-adapter"
 module Drnbench
   module PublishSubscribe
     class Runner
-      attr_reader :n_subscribers
+      attr_reader :subscribers
 
       def initialize(config)
         @config = config
 
-        @n_subscribers = 0
+        @subscribers = []
+        @published_messages = []
 
-        @feeder = Droonga::Client.new(tag: "droonga", port: 23003)
+        @feeder = Droonga::Client.new(:tag => @config.engine.tag,
+                                      :host => @config.engine.host,
+                                      :port => @config.engine.port)
 
         setup_server
         setup_initial_subscribers
@@ -56,12 +59,15 @@ module Drnbench
 
       def add_subscribers(n_subscribers)
         n_subscribers.times do |index|
-          @request[:path]
-          @request[:method]
-          @request[:body]
-          @client.connection.send(message, :response => :one)
+          message = @config.new_subscribe_request
+          client = Droonga::Client.new(:protocol => :http,
+                                       :host => @config.protocol_adapter.host,
+                                       :port => @config.protocol_adapter.port)
+          client.subscribe(message) do |object|
+            @published_messages << object
+          end
+          @subscribers << client
         end
-        @n_subscribers += n_subscribers
       end
 
       def do_feed
