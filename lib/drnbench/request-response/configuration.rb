@@ -51,9 +51,8 @@ module Drnbench
       private
       def prepare_request_patterns
         request_patterns = File.read(@request_patterns_file)
-        request_patterns = JSON.parse(request_patterns, :symbolize_names => true)
+        request_patterns = JSON.parse(request_patterns)
         
-
         if params[:request_pattern]
           params[:request_pattern][:frequency] = 1
           @request_patterns = [params[:request_pattern]]

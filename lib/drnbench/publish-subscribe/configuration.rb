@@ -49,12 +49,12 @@ module Drnbench
       private
       def prepare_subscribe_request
         subscribe_request_file = Pathname(@subscribe_request_file).expand_path(Dir.pwd)
-        JSON.parse(subscribe_request_file.read, :symbolize_names => true)
+        JSON.parse(subscribe_request_file.read)
       end
 
       def prepare_feed
         feed_file = Pathname(@feed_file).expand_path(Dir.pwd)
-        JSON.parse(feed_file.read, :symbolize_names => true)
+        JSON.parse(feed_file.read)
       end
     end
   end
