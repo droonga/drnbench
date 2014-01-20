@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require "thread"
-require "net/http"
+require "droonga/client"
 require "json"
 
 module Drnbench
@@ -20,22 +20,13 @@ module Drnbench
           request = @requests.pop
           request = fixup_request(request)
 
-          Net::HTTP.start(request["host"], request["port"]) do |http|
-            header = {
-              "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
-            }
-            response = nil
-            start_time = Time.now
-            case request["method"]
-            when "GET"
-              response = http.get(request["path"], header)
-            when "POST"
-              body = request["body"]
-              unless body.is_a?(String)
-                body = JSON.generate(body)
-              end
-              response = http.post(request["path"], body, header)
-            end
+          client = Droonga::Client.new(:protocol => :http,
+                                       :host => request["host"],
+                                       :port => request["port"])
+          message["headers"] ||= {}
+          message["headers"]["user-agent"] = "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
+          start_time = Time.now
+          client.request(request) do |response|
             @result << {
               :request => request,
               :status => response.code,

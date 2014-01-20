@@ -72,10 +72,10 @@ module Drnbench
 
       def do_feed
         message = @config.new_feed
-        message[:id]         = Time.now.to_f.to_s,
-        message[:date]       = Time.now
-        message[:statusCode] = 200
-        @feeder.connection.send(message, :response => :none)
+        message["id"]         = Time.now.to_f.to_s,
+        message["date"]       = Time.now
+        message["statusCode"] = 200
+        @feeder.send(message, :response => :none)
       end
     end
   end
