@@ -12,9 +12,9 @@ module Drnbench
       @receive_port = @config.receive_port
       @default_dataset = @config.default_dataset
 
-      @application_dir = Pathname(params[:application_dir])
-      @node = params[:node]
-      @node_options = params[:node_options]
+      @application_dir = Pathname(@config.application_dir)
+      @node = @config.node
+      @node_options = @config.node_options
     end
 
     def start
