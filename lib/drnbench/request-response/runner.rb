@@ -76,14 +76,14 @@ module Drnbench
       end
 
       def populate_request_pattern(request_pattern)
-        frequency = request_pattern[:frequency].to_f
+        frequency = request_pattern["frequency"].to_f
         n_requests = @config.n_requests * frequency
 
         base_patterns = nil
-        if request_pattern[:pattern]
-          base_patterns = [request_pattern[:pattern]]
+        if request_pattern["pattern"]
+          base_patterns = [request_pattern["pattern"]]
         else
-          base_patterns = request_pattern[:patterns]
+          base_patterns = request_pattern["patterns"]
         end
         base_patterns = base_patterns.shuffle
 
