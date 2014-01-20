@@ -44,6 +44,10 @@ module Drnbench
         [@wait, MIN_WAIT].max
       end
 
+      def mode
+        @mode.to_sym
+      end
+
       def request_patterns
         @request_patterns ||= prepare_request_patterns
       end
