@@ -46,7 +46,7 @@ module Drnbench
       def run
         publishing_times = @config.n_publishings
         n_will_be_published_messages = @subscribers.size * publishing_times
-        publishing_times do |index|
+        publishing_times.times do |index|
           do_feed
         end
 
