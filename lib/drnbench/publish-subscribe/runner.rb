@@ -47,22 +47,16 @@ module Drnbench
       def run
         publishing_times = @config.n_publishings
         n_will_be_published_messages = @subscribers.size * publishing_times
-        publishing_times.times do |index|
-          do_feed
-        end
 
-        published_messages = []
-        n_will_be_published_messages.times do
-          # we should implement "timeout" for too slow cases
-          published_messages << @published_messages.pop
-        end
+        do_feed(publishing_times)
+        published_messages = receive_messages(n_will_be_published_messages)
 
         teardown_server
         published_messages
       end
 
       def add_subscribers(n_subscribers)
-        prpgressbar = ProgressBar.new("adding subscribers", n_subscribers, STDERR)
+        progressbar = ProgressBar.new("adding subscribers", n_subscribers, STDERR)
         n_subscribers.times do |index|
           message = @config.new_subscribe_request
           client = Droonga::Client.new(:protocol => :http,
@@ -72,17 +66,38 @@ module Drnbench
             @published_messages.push(published_message)
           end
           @subscribers << client
-          prpgressbar.inc
+          progressbar.inc
         end
-        prpgressbar.finish
+        progressbar.finish
       end
 
-      def do_feed
+      def do_feed(count)
+        progressbar = ProgressBar.new("feeds", count, STDERR)
+        count.times do |index|
+          do_one_feed
+          progressbar.inc
+        end
+        progressbar.finish
+      end
+
+      def do_one_feed
         message = @config.new_feed
         message["id"]         = Time.now.to_f.to_s,
         message["date"]       = Time.now
         message["statusCode"] = 200
         @feeder.send(message, :response => :none)
+      end
+
+      def receive_messages(count)
+        progressbar = ProgressBar.new("received messages", count, STDERR)
+        published_messages = []
+        count.times do
+          # we should implement "timeout" for too slow cases
+          published_messages << @published_messages.pop
+          progressbar.inc
+        end
+        progressbar.finish
+        published_messages
       end
     end
   end
