@@ -20,21 +20,21 @@ module Drnbench
           request = @requests.pop
           fixup_request(request)
 
-          Net::HTTP.start(request[:host], request[:port]) do |http|
+          Net::HTTP.start(request["host"], request["port"]) do |http|
             header = {
               "user-agent" => "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
             }
             response = nil
             start_time = Time.now
-            case request[:method]
+            case request["method"]
             when "GET"
-              response = http.get(request[:path], header)
+              response = http.get(request["path"], header)
             when "POST"
-              body = request[:body]
+              body = request["body"]
               unless body.is_a?(String)
                 body = JSON.generate(body)
               end
-              response = http.post(request[:path], body, header)
+              response = http.post(request["path"], body, header)
             end
             @result << {
               :request => request,
@@ -54,11 +54,11 @@ module Drnbench
 
     private
     def fixup_request(request)
-      request[:host] ||= @config.default_host
-      request[:port] ||= @config.default_port
-      request[:path] ||= @config.default_path
-      request[:method] ||= @config.default_method
-      request[:method] = request[:method].upcase
+      request["host"] ||= @config.default_host
+      request["port"] ||= @config.default_port
+      request["path"] ||= @config.default_path
+      request["method"] ||= @config.default_method
+      request["method"] = request["method"].upcase
       request
     end
   end
