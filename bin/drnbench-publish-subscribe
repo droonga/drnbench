@@ -3,6 +3,7 @@
 
 require "drnbench"
 require "optparse"
+require "shellwords"
 
 config = Drnbench::PublishSubscribe::Configuration.new
 option_parser = OptionParser.new do |parser|
