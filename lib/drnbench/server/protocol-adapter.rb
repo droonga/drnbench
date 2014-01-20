@@ -39,10 +39,10 @@ module Drnbench
       env = {
         "DROONGA_ENGINE_DEFAULT_DATASET" => @default_dataset,
         "DROONGA_ENGINE_HOST"            => @config.engine.host,
-        "DROONGA_ENGINE_PORT"            => @config.engine.port,
+        "DROONGA_ENGINE_PORT"            => @config.engine.port.to_s,
         "DROONGA_ENGINE_TAG"             => @config.engine.tag,
         "DROONGA_ENGINE_RECEIVE_HOST"    => @host,
-        "DROONGA_ENGINE_RECEIVE_PORT"    => @receive_port,
+        "DROONGA_ENGINE_RECEIVE_PORT"    => @receive_port.to_s,
       }
       arguments = [env, *command]
       @pid = Process.spawn(*arguments)
