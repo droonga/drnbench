@@ -27,7 +27,7 @@ module Drnbench
     class ProtocolAdapterConfiguration
       attr_accessor :application_dir, :port, :receive_port, :default_dataset
       attr_accessor :node, :node_options
-      attr_accessor :engine_config
+      attr_accessor :engine
 
       def initialize
         @application_dir = Pathname(Dir.pwd)
@@ -36,7 +36,7 @@ module Drnbench
         @default_dataset = "Droonga"
         @node            = "node"
         @node_options    = []
-        @engine_config   = nil
+        @engine          = nil
       end
     end
   end
