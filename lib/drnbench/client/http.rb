@@ -26,13 +26,12 @@ module Drnbench
           request["headers"] ||= {}
           request["headers"]["user-agent"] = "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
           start_time = Time.now
-          client.request(request) do |response|
-            @result << {
-              :request => request,
-              :status => response.code,
-              :elapsed_time => Time.now - start_time,
-            }
-          end
+          response = client.request(request)
+          @result << {
+            :request => request,
+            :status => response.code,
+            :elapsed_time => Time.now - start_time,
+          }
           sleep @config.wait
         end
       end
