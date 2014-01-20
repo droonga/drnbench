@@ -95,7 +95,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-request-response \
+        # RUBYLIB=lib/ bundle exec bin/drnbench-request-response \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -200,7 +200,7 @@ Drnbench will start multiple clients and send many requests based on the pattern
  4. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-request-response \
+        # RUBYLIB=lib/ bundle exec bin/drnbench-request-response \
             --start-n-clients=1 \
             --end-n-clients=32 \
             --step=1 \
@@ -248,7 +248,7 @@ Steps to run:
     For example, a file "watch-subscribe.json" like:
     
         {
-          "path": "/droonga/watch-streaming?=keyword"
+          "path": "/droonga-streaming/watch?condition=keyword"
         }
     
  2. Create a patterns file for messages to be feeded:
@@ -274,7 +274,7 @@ Steps to run:
  3. Run drnbench with the pattern file.
     
         # cd ~/drnbench
-        # RUBYLIB=lib/ bin/drnbench-publish-subscribe \
+        # RUBYLIB=lib/ bundle exec bin/drnbench-publish-subscribe \
             --start-n-subscribers=1000 \
             --n-publishings=1000 \
             --n-steps=10 \
