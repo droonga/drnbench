@@ -51,7 +51,7 @@ module Drnbench
         end
 
         published_messages = []
-        n_will_be_published_messages.do
+        n_will_be_published_messages.times do
           # we should implement "timeout" for too slow cases
           published_messages << @published_messages.pop
         end
