@@ -23,8 +23,8 @@ module Drnbench
           client = Droonga::Client.new(:protocol => :http,
                                        :host => request["host"],
                                        :port => request["port"])
-          message["headers"] ||= {}
-          message["headers"]["user-agent"] = "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
+          request["headers"] ||= {}
+          request["headers"]["user-agent"] = "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
           start_time = Time.now
           client.request(request) do |response|
             @result << {
