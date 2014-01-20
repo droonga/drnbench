@@ -237,9 +237,12 @@ Steps to run:
  1. Create a patterns file for a subscribe request:
     
         {
-          "path":   "/path/to/endpoint",
-          "method": "HTTP method",
-          "body":   (sent as the request body)
+          "path":    "/path/to/endpoint",
+          "method":  "HTTP method",
+          "headers": {
+            "X-xxxx": "xxxxx",
+          },
+          "body":    (sent as the request body)
         }
     
     For example, a file "watch-subscribe.json" like:
