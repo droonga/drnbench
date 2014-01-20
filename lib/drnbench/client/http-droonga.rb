@@ -23,7 +23,6 @@ module Drnbench
       end
     end
 
-    private
     def fixup_request(request)
       reqyest[:path]   ||= "#{DEFAULT_PATH_BASE}/#{@command}"
       request[:method] ||= DEFAULT_METHOD
