@@ -20,6 +20,21 @@ module Drnbench
         @published_messages = Queue.new
       end
 
+      def run
+        setup_server
+        setup_subscribers
+
+        publishing_times = @config.n_publishings
+        n_will_be_published_messages = @subscribers.size * publishing_times
+
+        do_feed(publishing_times)
+        published_messages = receive_messages(n_will_be_published_messages)
+
+        teardown_server
+        published_messages
+      end
+
+      private
       def setup_server
         @engine = Engine.new(@config.engine)
         @engine.start
@@ -42,20 +57,6 @@ module Drnbench
         @subscribers.each do |subscriber|
           subscriber.close
         end
-      end
-
-      def run
-        setup_server
-        setup_subscribers
-
-        publishing_times = @config.n_publishings
-        n_will_be_published_messages = @subscribers.size * publishing_times
-
-        do_feed(publishing_times)
-        published_messages = receive_messages(n_will_be_published_messages)
-
-        teardown_server
-        published_messages
       end
 
       def add_subscribers(n_subscribers, n_expected_messages)
