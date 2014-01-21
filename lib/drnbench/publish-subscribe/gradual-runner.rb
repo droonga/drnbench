@@ -33,11 +33,14 @@ module Drnbench
       def run_once(results)
         @runner.increase_subscribers
         label = "#{@runner.n_subscribers} subscribers"
+        GC.disable
         result = Benchmark.bm do |benchmark|
           benchmark.report(label) do
             @runner.run
           end
         end
+        GC.enable
+        GC.start
         result = result.join("").strip.gsub(/[()]/, "").split(/\s+/)
         qps = @config.n_publishings.to_f / result.last.to_f
         if @config.report_progressively
