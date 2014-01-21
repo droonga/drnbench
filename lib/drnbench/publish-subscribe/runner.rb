@@ -18,9 +18,6 @@ module Drnbench
 
         @subscribers = []
         @published_messages = Queue.new
-
-        setup_server
-        setup_subscribers
       end
 
       def setup_server
@@ -48,6 +45,9 @@ module Drnbench
       end
 
       def run
+        setup_server
+        setup_subscribers
+
         publishing_times = @config.n_publishings
         n_will_be_published_messages = @subscribers.size * publishing_times
 
