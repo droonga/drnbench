@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 require "pathname"
-require "progressbar"
 require "droonga/client"
 require "drnbench/server/engine"
 require "drnbench/server/protocol-adapter"
@@ -43,6 +42,7 @@ module Drnbench
           new_n_subscribers = @subscribers.size
         end
         add_subscribers(new_n_subscribers)
+        ensure_subscribers_ready
       end
 
       private
@@ -70,7 +70,6 @@ module Drnbench
       end
 
       def add_subscribers(n_subscribers)
-        progressbar = ProgressBar.new("subscribe", n_subscribers, STDERR)
         n_subscribers.times do
           message = @config.new_subscribe_request
           client = Droonga::Client.new(:protocol => :http,
@@ -80,22 +79,27 @@ module Drnbench
             @published_messages.push(published_message)
           end
           @subscribers << client
-          progressbar.inc
         end
-        progressbar.finish
+      end
+
+      def ensure_subscribers_ready
+        sleep(1)
+        do_feed(1)
+        n_subscribers.times do
+          @published_messages.pop
+          break if @published_messages.empty?
+        end
+        @published_messages.clear
       end
 
       def do_feed(count)
-        progressbar = ProgressBar.new("feeds", count, STDERR)
         Droonga::Client.open(:tag => @config.engine.tag,
                              :host => @config.engine.host,
                              :port => @config.engine.port) do |feeder|
           count.times do
             do_one_feed(feeder)
-            progressbar.inc
           end
         end
-        progressbar.finish
       end
 
       def do_one_feed(feeder)
@@ -104,15 +108,12 @@ module Drnbench
       end
 
       def receive_messages(count)
-        progressbar = ProgressBar.new("received", count, STDERR)
         n_published_messages = 0
         count.times do
           # we should implement "timeout" for too slow cases
           @published_messages.pop
           n_published_messages += 1
-          progressbar.inc
         end
-        progressbar.finish
         n_published_messages
       end
     end
