@@ -11,25 +11,40 @@ require "drnbench/server/protocol-adapter"
 module Drnbench
   module PublishSubscribe
     class Runner
-      attr_reader :subscribers
-
       def initialize(config)
         @config = config
         @published_messages = Queue.new
       end
 
-      def run
+      def n_subscribers
+        @subscribers.size
+      end
+
+      def setup
         setup_server
         setup_subscribers
+      end
 
+      def teardown
+        teardown_subscribers
+        teardown_server
+      end
+
+      def run
         publishing_times = @config.n_publishings
         n_will_be_published_messages = @subscribers.size * publishing_times
 
         do_feed(publishing_times)
-        published_messages = receive_messages(n_will_be_published_messages)
+        receive_messages(n_will_be_published_messages)
+      end
 
-        teardown_server
-        published_messages
+      def increase_subscribers
+        if @subscribers.empty?
+          new_n_subscribers = @config.start_n_subscribers
+        else
+          new_n_subscribers = @subscribers.size
+        end
+        add_subscribers(new_n_subscribers)
       end
 
       private
@@ -48,8 +63,6 @@ module Drnbench
 
       def setup_subscribers
         @subscribers = []
-        add_subscribers(@config.start_n_subscribers,
-                        @config.n_publishings)
       end
 
       def teardown_subscribers
@@ -58,18 +71,15 @@ module Drnbench
         end
       end
 
-      def add_subscribers(n_subscribers, n_expected_messages)
+      def add_subscribers(n_subscribers)
         progressbar = ProgressBar.new("subscribe", n_subscribers, STDERR)
         n_subscribers.times do
           message = @config.new_subscribe_request
           client = Droonga::Client.new(:protocol => :http,
                                        :host => @config.protocol_adapter.host,
                                        :port => @config.protocol_adapter.port)
-          n_received_messages = 0
           client.subscribe(message) do |published_message|
             @published_messages.push(published_message)
-            n_received_messages += 1
-            break if n_received_messages == n_expected_messages
           end
           @subscribers << client
           progressbar.inc

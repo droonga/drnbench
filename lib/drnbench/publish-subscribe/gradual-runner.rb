@@ -15,9 +15,10 @@ module Drnbench
 
       def run
         results = []
-        @config.n_steps.times do |try_count|
-          @runner.add_subscribers(@runner.subscribers.size) if try_count > 0
-          label = "#{@runner.subscribers.size} subscribers"
+        @runner.setup
+        @config.n_steps.times do
+          @runner.increase_subscribers
+          label = "#{@runner.n_subscribers} subscribers"
           percentage = nil
           result = Benchmark.bm do |benchmark|
             benchmark.report(label) do
@@ -35,6 +36,7 @@ module Drnbench
           end
           results << [label, qps]
         end
+        @runner.teardown
         @total_results = [
           ["case", "qps"],
         ]
