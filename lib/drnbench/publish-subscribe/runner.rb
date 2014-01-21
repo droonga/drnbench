@@ -20,9 +20,6 @@ module Drnbench
         @published_messages = Queue.new
 
         setup_server
-        @feeder = Droonga::Client.new(:tag => @config.engine.tag,
-                                      :host => @config.engine.host,
-                                      :port => @config.engine.port)
         setup_initial_subscribers
       end
 
@@ -72,19 +69,23 @@ module Drnbench
 
       def do_feed(count)
         progressbar = ProgressBar.new("feeds", count, STDERR)
-        count.times do |index|
-          do_one_feed
-          progressbar.inc
+        Droonga::Client.open(:tag => @config.engine.tag,
+                             :host => @config.engine.host,
+                             :port => @config.engine.port) do |feeder|
+          count.times do |index|
+            do_one_feed(feeder)
+            progressbar.inc
+          end
         end
         progressbar.finish
       end
 
-      def do_one_feed
+      def do_one_feed(feeder)
         message = @config.new_feed
         message["id"]         = Time.now.to_f.to_s,
         message["date"]       = Time.now
         message["statusCode"] = 200
-        @feeder.send(message, :response => :none)
+        feeder.send(message, :response => :none)
       end
 
       def receive_messages(count)
