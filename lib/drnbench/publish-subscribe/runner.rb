@@ -100,10 +100,7 @@ module Drnbench
 
       def do_one_feed(feeder)
         message = @config.new_feed
-        message["id"]         = Time.now.to_f.to_s,
-        message["date"]       = Time.now
-        message["statusCode"] = 200
-        feeder.send(message, :response => :none)
+        feeder.send(message)
       end
 
       def receive_messages(count)
