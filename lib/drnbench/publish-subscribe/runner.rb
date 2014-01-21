@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require "json"
-require "yajl"
 require "pathname"
 require "progressbar"
 require "droonga/client"
