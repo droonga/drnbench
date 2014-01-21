@@ -60,7 +60,7 @@ module Drnbench
 
       def add_subscribers(n_subscribers, n_expected_messages)
         progressbar = ProgressBar.new("subscribe", n_subscribers, STDERR)
-        n_subscribers.times do |index|
+        n_subscribers.times do
           message = @config.new_subscribe_request
           client = Droonga::Client.new(:protocol => :http,
                                        :host => @config.protocol_adapter.host,
@@ -82,7 +82,7 @@ module Drnbench
         Droonga::Client.open(:tag => @config.engine.tag,
                              :host => @config.engine.host,
                              :port => @config.engine.port) do |feeder|
-          count.times do |index|
+          count.times do
             do_one_feed(feeder)
             progressbar.inc
           end
