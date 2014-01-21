@@ -15,8 +15,6 @@ module Drnbench
 
       def initialize(config)
         @config = config
-
-        @subscribers = []
         @published_messages = Queue.new
       end
 
@@ -49,6 +47,7 @@ module Drnbench
       end
 
       def setup_subscribers
+        @subscribers = []
         add_subscribers(@config.start_n_subscribers,
                         @config.n_publishings)
       end
