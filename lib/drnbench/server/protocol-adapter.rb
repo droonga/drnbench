@@ -51,8 +51,6 @@ module Drnbench
     end
 
     def teardown
-      return unless temporary?
-
       Process.kill(:TERM, @pid)
       Process.wait(@pid)
     end
