@@ -84,10 +84,12 @@ module Drnbench
 
       def ensure_subscribers_ready
         sleep(1)
-        do_feed(1)
-        n_subscribers.times do
-          @published_messages.pop
-          break if @published_messages.empty?
+        2.times do
+          do_feed(1)
+          n_subscribers.times do
+            @published_messages.pop
+            break if @published_messages.empty?
+          end
         end
         @published_messages.clear
       end
