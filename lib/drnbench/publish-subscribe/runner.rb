@@ -20,7 +20,7 @@ module Drnbench
         @published_messages = Queue.new
 
         setup_server
-        setup_initial_subscribers
+        setup_subscribers
       end
 
       def setup_server
@@ -36,8 +36,15 @@ module Drnbench
         @engine.stop
       end
 
-      def setup_initial_subscribers
-        add_subscribers(@config.start_n_subscribers)
+      def setup_subscribers
+        add_subscribers(@config.start_n_subscribers,
+                        @config.n_publishings)
+      end
+
+      def teardown_subscribers
+        @subscribers.each do |subscriber|
+          subscriber.close
+        end
       end
 
       def run
@@ -51,15 +58,18 @@ module Drnbench
         published_messages
       end
 
-      def add_subscribers(n_subscribers)
+      def add_subscribers(n_subscribers, n_expected_messages)
         progressbar = ProgressBar.new("subscribe", n_subscribers, STDERR)
         n_subscribers.times do |index|
           message = @config.new_subscribe_request
           client = Droonga::Client.new(:protocol => :http,
                                        :host => @config.protocol_adapter.host,
                                        :port => @config.protocol_adapter.port)
+          n_received_messages = 0
           client.subscribe(message) do |published_message|
             @published_messages.push(published_message)
+            n_received_messages += 1
+            break if n_received_messages == n_expected_messages
           end
           @subscribers << client
           progressbar.inc
