@@ -19,15 +19,10 @@ module Drnbench
         @config.n_steps.times do
           @runner.increase_subscribers
           label = "#{@runner.n_subscribers} subscribers"
-          percentage = nil
           result = Benchmark.bm do |benchmark|
             benchmark.report(label) do
-              n_published_messages = @runner.run
-              percentage = n_published_messages.to_f / @config.n_publishings * 100
+              @runner.run
             end
-          end
-          if @config.report_progressively
-            puts "=> #{percentage} % feeds are notified"
           end
           result = result.join("").strip.gsub(/[()]/, "").split(/\s+/)
           qps = @config.n_publishings.to_f / result.last.to_f
