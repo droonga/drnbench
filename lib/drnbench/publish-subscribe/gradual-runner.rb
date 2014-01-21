@@ -22,8 +22,8 @@ module Drnbench
           percentage = nil
           result = Benchmark.bm do |benchmark|
             benchmark.report(label) do
-              published_messages = @runner.run
-              percentage = published_messages.size.to_f / @config.n_publishings * 100
+              n_published_messages = @runner.run
+              percentage = n_published_messages.to_f / @config.n_publishings * 100
             end
           end
           if @config.report_progressively

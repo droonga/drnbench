@@ -105,14 +105,15 @@ module Drnbench
 
       def receive_messages(count)
         progressbar = ProgressBar.new("received", count, STDERR)
-        published_messages = []
+        n_published_messages = 0
         count.times do
           # we should implement "timeout" for too slow cases
-          published_messages << @published_messages.pop
+          @published_messages.pop
+          n_published_messages += 1
           progressbar.inc
         end
         progressbar.finish
-        published_messages
+        n_published_messages
       end
     end
   end
