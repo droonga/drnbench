@@ -19,11 +19,10 @@ module Drnbench
         @subscribers = []
         @published_messages = Queue.new
 
+        setup_server
         @feeder = Droonga::Client.new(:tag => @config.engine.tag,
                                       :host => @config.engine.host,
                                       :port => @config.engine.port)
-
-        setup_server
         setup_initial_subscribers
       end
 
