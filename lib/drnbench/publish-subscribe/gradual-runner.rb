@@ -16,26 +16,34 @@ module Drnbench
       def run
         results = []
         @runner.setup
-        @config.n_steps.times do
-          @runner.increase_subscribers
-          label = "#{@runner.n_subscribers} subscribers"
-          result = Benchmark.bm do |benchmark|
-            benchmark.report(label) do
-              @runner.run
-            end
+        begin
+          @config.n_steps.times do
+            run_once(results)
           end
-          result = result.join("").strip.gsub(/[()]/, "").split(/\s+/)
-          qps = @config.n_publishings.to_f / result.last.to_f
-          if @config.report_progressively
-            puts "   (#{qps} queries per second)"
-          end
-          results << [label, qps]
+        ensure
+          @runner.teardown
         end
-        @runner.teardown
         @total_results = [
           ["case", "qps"],
         ]
         @total_results += results
+      end
+
+      private
+      def run_once(results)
+        @runner.increase_subscribers
+        label = "#{@runner.n_subscribers} subscribers"
+        result = Benchmark.bm do |benchmark|
+          benchmark.report(label) do
+            @runner.run
+          end
+        end
+        result = result.join("").strip.gsub(/[()]/, "").split(/\s+/)
+        qps = @config.n_publishings.to_f / result.last.to_f
+        if @config.report_progressively
+          puts "   (#{qps} queries per second)"
+        end
+        results << [label, qps]
       end
     end
   end
