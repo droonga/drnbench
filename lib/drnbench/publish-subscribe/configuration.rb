@@ -45,7 +45,7 @@ module Drnbench
       def new_feed
         Marshal.load(Marshal.dump(feed))
       end
- 
+
       private
       def prepare_subscribe_request
         subscribe_request_file = Pathname(@subscribe_request_file).expand_path(Dir.pwd)
