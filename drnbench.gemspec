@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
     "Rakefile",
     "Gemfile",
     "#{spec.name}.gemspec",
-    "License.txt",
+    "LICENSE.txt",
   ]
   spec.files += Dir.glob("lib/**/*.rb")
   spec.test_files += Dir.glob("test/**/*")
