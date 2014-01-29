@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
     "#{spec.name}.gemspec",
     "LICENSE.txt",
   ]
+  spec.files += Dir.glob("doc/text/**/*")
   spec.files += Dir.glob("lib/**/*.rb")
   spec.test_files += Dir.glob("test/**/*")
   Dir.chdir("bin") do
