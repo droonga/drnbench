@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   entries = readme.split(/^\#\#\s(.*)$/)
   description = clean_white_space.call(entries[entries.index("Description") + 1])
   spec.summary, spec.description, = description.split(/\n\n+/, 3)
-  spec.license = "MIT"
+  spec.license = "GPLv3 or later"
   spec.files = [
     "README.md",
     "Rakefile",

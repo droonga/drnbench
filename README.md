@@ -289,7 +289,7 @@ Steps to run:
 
 ## License
 
-The MIT License (MIT)
+GPLv3 or later.
 
 Copyright (c) 2013-2014 Droonga Project
 
