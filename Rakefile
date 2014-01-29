@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require "bundler/gem_helper"
+require "packnga"
 
 base_dir = File.join(File.dirname(__FILE__))
 helper = Bundler::GemHelper.new(base_dir)
@@ -25,3 +26,8 @@ end
 
 helper.install
 spec = helper.gemspec
+
+Packnga::DocumentTask.new(spec) do |task|
+  task.original_language = "en"
+  task.translate_languages = ["ja"]
+end
