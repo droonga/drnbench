@@ -70,7 +70,7 @@ module Drnbench
       end
 
       def max_elapsed_time
-        @max_elapsed_time ||= @elapsed_times.min
+        @max_elapsed_time ||= @elapsed_times.max
       end
 
       def average_elapsed_time
