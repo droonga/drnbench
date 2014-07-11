@@ -78,7 +78,7 @@ module Drnbench
         end
 
         def csv_header
-          Drnbench::Result.keys + statuses
+          Result.keys + statuses
         end
 
         def csv_body
