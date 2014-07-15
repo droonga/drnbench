@@ -116,11 +116,11 @@ module Drnbench
         status_percentages.sort! do |a, b|
           (-1) * (a[:percentage] <=> b[:percentage])
         end
-        status_percentages = {}
+        final_status_percentages = {}
         status_percentages.each do |status|
-          status_percentages[status[:status]] = status[:percentage]
+          final_status_percentages[status[:status]] = status[:percentage]
         end
-        status_percentages
+        final_status_percentages
       end
     end
   end
