@@ -92,7 +92,7 @@ module Drnbench
 
       def populate_request_pattern(request_pattern)
         frequency = request_pattern["frequency"].to_f
-        n_requests = @config.n_requests * frequency
+        n_requests = @config.n_requests * @config.end_n_clients * frequency
 
         base_patterns = nil
         if request_pattern["pattern"]
