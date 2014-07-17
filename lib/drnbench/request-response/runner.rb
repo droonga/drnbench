@@ -103,7 +103,11 @@ module Drnbench
         base_patterns = base_patterns.shuffle
 
         n_requests.round.times do |count|
-          @requests << base_patterns[count % base_patterns.size]
+          pattern = base_patterns[count % base_patterns.size]
+          pattern["host"] ||= request_pattern["host"]
+          pattern["port"] ||= request_pattern["port"]
+          pattern["method"] ||= request_pattern["method"]
+          @requests << pattern
         end
       end
     end
