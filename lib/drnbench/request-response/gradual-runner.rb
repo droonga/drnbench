@@ -41,6 +41,7 @@ module Drnbench
           benchmark.run
           if @config.report_progressively
             puts benchmark.result.to_s
+            puts ""
           end
           @result << benchmark.result
         end
