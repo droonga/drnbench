@@ -23,6 +23,7 @@ module Drnbench
       attr_reader :n_clients, :result
 
       def initialize(n_clients, config)
+        n_clients = 1 if n_clients.zero?
         @n_clients = n_clients
         @config = config
         populate_requests
