@@ -16,7 +16,8 @@
 module Drnbench
   module RequestResponse
     class Result
-      attr_reader :n_clients, :duration, :statuses, :n_slow_requests
+      attr_reader :n_clients, :statuses, :n_slow_requests
+      attr_accessor :duration
 
       class << self
         def keys

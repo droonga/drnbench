@@ -68,6 +68,7 @@ module Drnbench
           sleep 1
           if requests_queue.empty?
             puts "WORNING: requests queue becomes empty! (#{Time.now - start_time} sec)"
+            @result.duration = Time.now - start_time
             break
           end
         end
