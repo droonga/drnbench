@@ -37,6 +37,10 @@ module Drnbench
       private
       def process_requests
         requests_queue = Queue.new
+        @requests.each do |request|
+          requests_queue.push(request)
+        end
+
         @result = Result.new(:n_clients => @n_clients,
                              :duration => @config.duration,
                              :n_slow_requests => @config.n_slow_requests)
@@ -61,12 +65,11 @@ module Drnbench
 
         start_time = Time.now
         while Time.now - start_time < @config.duration
-          if requests_queue.empty?
-            @requests.each do |request|
-              requests_queue.push(request)
-            end
-          end
           sleep 1
+          if requests_queue.empty?
+            puts "WORNING: requests queue becomes empty! (#{Time.now - start_time} sec)"
+            break
+          end
         end
 
         @clients.each do |client|
