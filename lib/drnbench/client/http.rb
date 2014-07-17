@@ -21,6 +21,8 @@ module Drnbench
   class HttpClient
     attr_reader :requests, :results, :wait
 
+    SUPPORTED_HTTP_METHODS = ["GET", "POST"]
+
     def initialize(params, config)
       @requests = params[:requests]
       @result   = params[:result]
@@ -62,6 +64,9 @@ module Drnbench
       request["path"] ||= @config.default_path
       request["method"] ||= @config.default_method
       request["method"] = request["method"].upcase
+      unless SUPPORTED_HTTP_METHODS.include?(request["method"])
+        request["method"] = "GET"
+      end
       request
     end
   end
