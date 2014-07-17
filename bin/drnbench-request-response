@@ -41,6 +41,10 @@ option_parser = OptionParser.new do |parser|
             "step to increase number of clients (optional)") do |step|
     config.step = step
   end
+  parser.on("--n-slow-requests=N", Integer,
+            "number of reporting slow requests (optional)") do |n_slow_requests|
+    config.n_slow_requests = n_slow_requests
+  end
 
   parser.on("--mode=MODE", String,
             "mode of benchmark (optional)",

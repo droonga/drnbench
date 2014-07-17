@@ -16,7 +16,7 @@
 module Drnbench
   module RequestResponse
     class Result
-      attr_reader :n_clients, :duration, :statuses
+      attr_reader :n_clients, :duration, :statuses, :n_slow_queries
 
       class << self
         def keys
@@ -34,6 +34,7 @@ module Drnbench
       def initialize(params)
         @n_clients = params[:n_clients]
         @duration = params[:duration]
+        @n_slow_queries = params[:n_slow_queries] || 5
 
         @results = []
         @total_elapsed_time = 0.0
@@ -77,6 +78,20 @@ module Drnbench
         @average_elapsed_time ||= @total_elapsed_time / @elapsed_times.size
       end
 
+      def top_slow_requests
+        slow_requests[0..@n_slow_queries-1].collect do |result|
+          request = result[:request]
+          "#{result[:elapsed_time]}msec " +
+            "#{request["method"]} http://#{request["host"]}:#{request["port"]}#{request["path"]}"
+        end
+      end
+
+      def slow_requests
+        @results.sort do |a, b|
+          b[:elapsed_time] <=> a[:elapsed_time]
+        end
+      end
+
       def to_s
         "Total requests: #{total_n_requests} " +
           "(#{queries_per_second} queries per second)\n" +
@@ -87,7 +102,11 @@ module Drnbench
         "Elapsed time:\n" +
         "  min:     #{min_elapsed_time} sec\n" +
         "  max:     #{max_elapsed_time} sec\n" +
-        "  average: #{average_elapsed_time} sec"
+        "  average: #{average_elapsed_time} sec\n" +
+        "Top #{@n_slow_queries} slow requests:\n" +
+        top_slow_requests.collect do |request|
+          "  #{request}"
+        end.join("\n")
       end
 
       def values

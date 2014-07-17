@@ -37,7 +37,8 @@ module Drnbench
       def process_requests
         requests_queue = Queue.new
         @result = Result.new(:n_clients => @n_clients,
-                             :duration => @config.duration)
+                             :duration => @config.duration,
+                             :n_slow_requests => @config.n_slow_requests)
 
         client_params = {
           :requests => requests_queue,
