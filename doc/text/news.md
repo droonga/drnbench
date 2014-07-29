@@ -1,6 +1,6 @@
 # News
 
-## 1.0.1: 2014-07-29 (planned)
+## 1.0.1: 2014-07-29
 
  * Report throughput more correctly.
  * Report percentages of returned HTTP statuses correctly.
