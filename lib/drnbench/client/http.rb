@@ -27,6 +27,7 @@ module Drnbench
       @requests = params[:requests]
       @result   = params[:result]
       @config   = config
+      @count    = 0
     end
 
     def run
@@ -48,10 +49,11 @@ module Drnbench
             :request => request,
             :status => response.code,
             :elapsed_time => Time.now - start_time,
-            :index => @result.size,
+            :index => @count,
           }
           @last_request = nil
           @last_start_time = nil
+          @count += 1
           sleep @config.wait
         end
       end
@@ -66,7 +68,7 @@ module Drnbench
           :request => @last_request,
           :status => "0",
           :elapsed_time => Time.now - @last_start_time,
-          :index => "#{@result.size}(last)",
+          :index => "#{@count}(last)",
         }
       end
     end
