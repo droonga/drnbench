@@ -18,7 +18,7 @@ require "json"
 module Drnbench
   module RequestResponse
     class Configuration
-      attr_accessor :duration, :wait, :request_patterns_file
+      attr_accessor :duration, :wait, :interval, :request_patterns_file
       attr_accessor :start_n_clients, :end_n_clients, :step, :n_requests, :n_slow_requests
       attr_accessor :mode
       attr_accessor :default_host, :default_port, :default_path, :default_method, :default_timeout
@@ -29,6 +29,7 @@ module Drnbench
 
       def initialize
         @wait                 = 1
+        @interval             = 5
         @start_n_clients      = 1
         @end_n_clients        = 1
         @step                 = 1

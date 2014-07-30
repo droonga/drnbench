@@ -44,6 +44,7 @@ module Drnbench
             puts ""
           end
           @result << benchmark.result
+          sleep @config.interval
         end
       end
 

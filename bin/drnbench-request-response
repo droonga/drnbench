@@ -29,6 +29,10 @@ option_parser = OptionParser.new do |parser|
             "wait for each request") do |wait|
     config.wait = wait
   end
+  parser.on("--interval=SECONDS", Float,
+            "interval for each gradual case") do |interval|
+    config.interval = interval
+  end
   parser.on("--start-n-clients=N", Integer,
             "initial number of clients (optional)") do |n_clients|
     config.start_n_clients = n_clients
