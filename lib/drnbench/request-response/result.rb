@@ -83,7 +83,7 @@ module Drnbench
         slow_requests[0..@n_slow_requests-1].collect do |result|
           request = result[:request]
           status = result[:status].to_i
-          if result[:status].zero?
+          if status.zero?
             status = "#{status}(aborted)"
           end
           "#{result[:elapsed_time]} sec: " +
