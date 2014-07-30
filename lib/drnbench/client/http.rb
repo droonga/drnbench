@@ -23,11 +23,15 @@ module Drnbench
 
     SUPPORTED_HTTP_METHODS = ["GET", "POST"]
 
+    @@count = 0
+
     def initialize(params, config)
       @requests = params[:requests]
       @result   = params[:result]
       @config   = config
       @count    = 0
+      @id       = @@count
+      @@count += 1
     end
 
     def run
@@ -51,14 +55,14 @@ module Drnbench
               :request => request,
               :status => response.code,
               :elapsed_time => Time.now - start_time,
-              :index => @count,
+              :index => "#{@id}-#{@count}",
             }
           rescue Timeout::Error
             @result << {
               :request => request,
               :status => "0",
               :elapsed_time => Time.now - start_time,
-              :index => @count,
+              :index => "#{@id}-#{@count}",
             }
           end
           @last_request = nil
@@ -78,7 +82,7 @@ module Drnbench
           :request => @last_request,
           :status => "0",
           :elapsed_time => Time.now - @last_start_time,
-          :index => "#{@count}(last)",
+          :index => "#{@id}-#{@count}(last)",
         }
       end
     end
