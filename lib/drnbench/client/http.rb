@@ -41,12 +41,16 @@ module Drnbench
           request["headers"] ||= {}
           request["headers"]["user-agent"] = "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
           start_time = Time.now
+          @last_request = request
+          @last_start_time = start_time
           response = client.request(request)
           @result << {
             :request => request,
             :status => response.code,
             :elapsed_time => Time.now - start_time,
           }
+          @last_request = nil
+          @last_start_time = nil
           sleep @config.wait
         end
       end
@@ -55,6 +59,14 @@ module Drnbench
 
     def stop
       @thread.exit
+
+      if @last_request
+        @result << {
+          :request => @last_request,
+          :status => 0,
+          :elapsed_time => Time.now - @last_start_time,
+        }
+      end
     end
 
     private
