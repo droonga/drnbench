@@ -82,8 +82,13 @@ module Drnbench
       def top_slow_requests
         slow_requests[0..@n_slow_requests-1].collect do |result|
           request = result[:request]
+          status = result[:status]
+          if result[:status].zero?
+            status = "#{status}(aborted)"
+          end
           "#{result[:elapsed_time]} sec: " +
-            "#{request["method"]} http://#{request["host"]}:#{request["port"]}#{request["path"]}"
+            "#{request["method"]} #{status} " +
+            "http://#{request["host"]}:#{request["port"]}#{request["path"]}"
         end
       end
 
