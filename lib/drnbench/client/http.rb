@@ -45,6 +45,7 @@ module Drnbench
           start_time = Time.now
           @last_request = request
           @last_start_time = start_time
+          begin
           response = client.request(request)
           @result << {
             :request => request,
@@ -52,6 +53,14 @@ module Drnbench
             :elapsed_time => Time.now - start_time,
             :index => @count,
           }
+          rescue Timeout::Error
+            @result << {
+              :request => request,
+              :status => "0",
+              :elapsed_time => Time.now - start_time,
+              :index => @count,
+            }
+          end
           @last_request = nil
           @last_start_time = nil
           @count += 1
