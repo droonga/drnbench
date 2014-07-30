@@ -113,6 +113,7 @@ module Drnbench
           pattern["host"] ||= request_pattern["host"]
           pattern["port"] ||= request_pattern["port"]
           pattern["method"] ||= request_pattern["method"]
+          pattern["timeout"] ||= request_pattern["timeout"]
           @requests << pattern
         end
       end

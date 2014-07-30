@@ -38,7 +38,8 @@ module Drnbench
 
           client = Droonga::Client.new(:protocol => :http,
                                        :host => request["host"],
-                                       :port => request["port"])
+                                       :port => request["port"],
+                                       :timeout => request["timeout"])
           request["headers"] ||= {}
           request["headers"]["user-agent"] = "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
           start_time = Time.now
@@ -83,6 +84,7 @@ module Drnbench
       unless SUPPORTED_HTTP_METHODS.include?(request["method"])
         request["method"] = "GET"
       end
+      request["timeout"] ||= @config.default_timeout
       request
     end
   end

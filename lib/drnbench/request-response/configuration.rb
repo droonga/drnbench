@@ -21,7 +21,7 @@ module Drnbench
       attr_accessor :duration, :wait, :request_patterns_file
       attr_accessor :start_n_clients, :end_n_clients, :step, :n_requests, :n_slow_requests
       attr_accessor :mode
-      attr_accessor :default_host, :default_port, :default_path, :default_method
+      attr_accessor :default_host, :default_port, :default_path, :default_method, :default_timeout
       attr_accessor :report_progressively, :output_path
 
       MIN_DURATION = 1
@@ -40,6 +40,7 @@ module Drnbench
         @default_port         = 80
         @default_path         = "/"
         @default_method       = "GET"
+        @default_timeout      = 5.0
 
         @report_progressively = true
         @output_path          = "/tmp/drnbench-result.csv"

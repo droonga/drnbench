@@ -74,6 +74,10 @@ option_parser = OptionParser.new do |parser|
             "default HTTP method (optional)") do |method|
     config.default_method = method
   end
+  parser.on("--default-timeout=SECONDS", Float,
+            "default timeout (optional)") do |timeout|
+    config.default_timeout = timeout
+  end
 
   parser.on("--output-path=PATH",
             "path to output statistics as a CSV file (optional)") do |path|
