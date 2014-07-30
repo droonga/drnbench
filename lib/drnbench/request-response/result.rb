@@ -87,7 +87,7 @@ module Drnbench
             status = "#{status}(aborted)"
           end
           "#{result[:elapsed_time]} sec: " +
-            "#{request["method"]} #{status} #{result[:index]}" +
+            "#{request["method"]} #{status} #{result[:index]} " +
             "http://#{request["host"]}:#{request["port"]}#{request["path"]}"
         end
       end
