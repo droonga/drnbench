@@ -63,7 +63,7 @@ module Drnbench
       if @last_request
         @result << {
           :request => @last_request,
-          :status => 0,
+          :status => "0",
           :elapsed_time => Time.now - @last_start_time,
         }
       end

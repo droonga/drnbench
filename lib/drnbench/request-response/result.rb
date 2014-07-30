@@ -82,7 +82,7 @@ module Drnbench
       def top_slow_requests
         slow_requests[0..@n_slow_requests-1].collect do |result|
           request = result[:request]
-          status = result[:status]
+          status = result[:status].to_i
           if result[:status].zero?
             status = "#{status}(aborted)"
           end
