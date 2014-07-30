@@ -48,6 +48,7 @@ module Drnbench
             :request => request,
             :status => response.code,
             :elapsed_time => Time.now - start_time,
+            :index => @result.size,
           }
           @last_request = nil
           @last_start_time = nil
@@ -65,6 +66,7 @@ module Drnbench
           :request => @last_request,
           :status => "0",
           :elapsed_time => Time.now - @last_start_time,
+          :index => @result.size,
         }
       end
     end
