@@ -55,6 +55,10 @@ module Drnbench
         @total_elapsed_time += result[:elapsed_time]
       end
 
+      def empty?
+        @results.empty?
+      end
+
       def total_n_requests
         @total_n_requests ||= @results.size
       end

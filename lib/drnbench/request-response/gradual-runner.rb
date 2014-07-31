@@ -34,6 +34,8 @@ module Drnbench
       def run_benchmarks
         @result = Result.new
         @config.start_n_clients.step(@config.end_n_clients, @config.step) do |n_clients|
+          sleep @config.interval unless @result.empty?
+
           benchmark = Runner.new(n_clients, @config)
           if @config.report_progressively
             puts "Running benchmark with #{n_clients} clients..."
@@ -44,7 +46,6 @@ module Drnbench
             puts ""
           end
           @result << benchmark.result
-          sleep @config.interval
         end
       end
 
