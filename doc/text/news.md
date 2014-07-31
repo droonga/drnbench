@@ -1,6 +1,6 @@
 # News
 
-## 1.0.2: 2014-07-30 (planned)
+## 1.0.2: 2014-07-30
 
  * 'drnbench-request-response'
    * Report aborted requests as slow requests.
