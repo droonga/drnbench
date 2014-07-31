@@ -96,8 +96,7 @@ module Drnbench
             "#{result[:elapsed_time]} sec:",
             request["method"],
             status,
-            result[:client],
-            index,
+            "<#{result[:client]}>#{index}",
             "http://#{request["host"]}:#{request["port"]}#{request["path"]}",
           ].join(" ")
         end
@@ -121,7 +120,7 @@ module Drnbench
         "  max:     #{max_elapsed_time} sec\n" +
         "  average: #{average_elapsed_time} sec\n" +
         "Top #{@n_slow_requests} slow requests:\n" +
-        " [time: method status client index url]\n" +
+        " [time: method status <client>index url]\n" +
         top_slow_requests.collect do |request|
           "  #{request}"
         end.join("\n")
