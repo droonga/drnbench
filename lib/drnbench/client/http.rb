@@ -55,14 +55,16 @@ module Drnbench
               :request => request,
               :status => response.code,
               :elapsed_time => Time.now - start_time,
-              :index => "#{@id}-#{@count}",
+              :client => @id,
+              :index => @count,
             }
           rescue Timeout::Error
             @result << {
               :request => request,
               :status => "0",
               :elapsed_time => Time.now - start_time,
-              :index => "#{@id}-#{@count}",
+              :client => @id,
+              :index => @count,
             }
           end
           @last_request = nil
@@ -82,7 +84,9 @@ module Drnbench
           :request => @last_request,
           :status => "0",
           :elapsed_time => Time.now - @last_start_time,
-          :index => "#{@id}-#{@count}(last)",
+          :client => @id,
+          :index => @count,
+          :last => true,
         }
       end
     end
