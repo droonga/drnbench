@@ -59,6 +59,10 @@ module Drnbench
           @results[result.n_clients] = result
         end
 
+        def empty?
+          @results.empty?
+        end
+
         def statuses
           @statuses ||= prepare_statuses
         end
