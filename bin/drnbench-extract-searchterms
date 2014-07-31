@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+#
+# Copyright (C) 2014  Droonga Project
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+require "drnbench"
+require "ostruct"
+require "optparse"
+require "json"
+
+options = OpenStruct.new
+options.column_index = 0
+
+option_parser = OptionParser.new do |parser|
+  parser.version = Drnbench::VERSION
+
+  parser.on("--column-index=INDEX", Integer,
+            "Index number of the column to be extracted.",
+            "(#{options.output_column_index})") do |index|
+    options.column_index = index
+  end
+end
+
+groonga_select_result_files = option_parser.parse!(ARGV)
+
+def output_column_value(select_result, column_index)
+  select_result = JSON.parse(select_result)
+  body = select_result[1]
+  search_result = body.first
+  records = search_result[2..-1]
+  records.each do |record|
+    puts record[column_index]
+  end
+end
+
+if groonga_select_result_files.empty?
+  output_column_value($stdin.read, options.column_index)
+else
+  groonga_select_result_files.each do |select_result_file|
+    File.open(select_result_file) do |input|
+      output_column_value(input.read, options.column_index)
+    end
+  end
+end
