@@ -1,0 +1,112 @@
+#!/usr/bin/env ruby
+#
+# Copyright (C) 2014  Droonga Project
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+require "drnbench"
+require "ostruct"
+require "optparse"
+require "json"
+
+options = {
+  :base_params => "limit=10&offset=0",
+  :hosts       => [],
+}
+
+option_parser = OptionParser.new do |parser|
+  parser.version = Drnbench::VERSION
+
+  parser.on("--base-params=PARAMS",
+            "Base parameters for each select request",
+            "(#{options[:base_params]})") do |params|
+    options[:base_params] = params
+  end
+
+  parser.on("--hosts=NAME1,NAME2,...", Array,
+            "Target hosts to be requested parallely") do |hosts|
+    options[:hosts] = hosts
+  end
+end
+
+searchterms_files = option_parser.parse!(ARGV)
+
+def sanitize_for_param(value)
+  value.to_s
+       .gsub(/[:;]/, " ")
+       .strip
+       .gsub(/ +/, "%20")
+end
+
+def generate_patterns(params)
+  host        = params[:host]
+  frequency   = params[:frequency] || 1.0
+  searchterms = params[:searchterms] || []
+  base_params = params[:base_params] || ""
+
+  request_patterns = searchterms.collect do |searchterm|
+    query_params = "query=#{sanitize_for_param(searchterm)}"
+    unless base_params.empty?
+      query_params = "#{base_params}&#{query_params}"
+    end
+    {
+      "path" => "/d/select?#{query_params}",
+    }
+  end
+
+  pattern = {
+    "frequency" => frequency,
+    "method"    => "get",
+    "patterns"  => request_patterns,
+  }
+
+  if host
+    pattern["host"] = host 
+    { "with-query-#{host}" => pattern }
+  else
+    { "with-query" => pattern }
+  end
+end
+
+def output_patterns(params)
+  patterns = {}
+
+  hosts = params[:hosts] || []
+  if hosts.empty?
+    patterns.merge!(generate_patterns(params))
+  else
+    hosts.each do |host|
+      host_params = params.merge(:host => host,
+                                 :frequency => 1.0 / hosts.size)
+      host_patterns = generate_patterns(host_params)
+      patterns.merge!(host_patterns)
+    end
+  end
+
+  puts JSON.pretty_generate(patterns)
+end
+
+if searchterms_files.empty?
+  searchterms = $stdin.read.split(/\r?\n/)
+  output_patterns(options.merge(:searchterms => searchterms))
+else
+  searchterms_files.each do |searchterms_file|
+    File.open(searchterms_file) do |input|
+      searchterms = input.read.split(/\r?\n/)
+      output_patterns(options.merge(:searchterms => searchterms))
+    end
+  end
+end
+
+
