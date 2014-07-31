@@ -21,6 +21,8 @@ require "optparse"
 
 config = Drnbench::RequestResponse::Configuration.new
 option_parser = OptionParser.new do |parser|
+  parser.version = Drnbench::VERSION
+
   parser.on("--duration=SECONDS", Float,
             "duration of the benmark") do |duration|
     config.duration = duration

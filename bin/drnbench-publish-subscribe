@@ -22,6 +22,8 @@ require "shellwords"
 
 config = Drnbench::PublishSubscribe::Configuration.new
 option_parser = OptionParser.new do |parser|
+  parser.version = Drnbench::VERSION
+
   parser.on("--start-n-subscribers=N", Integer,
             "initial number of subscribers") do |n_subscribers|
     config.start_n_subscribers = n_subscribers
