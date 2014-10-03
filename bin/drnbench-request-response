@@ -78,9 +78,9 @@ option_parser = OptionParser.new do |parser|
     config.request_patterns_file = File.expand_path(path)
   end
 
-  parser.on("--default-host=HOST", String,
-            "Default host name for each request.",
-            "(#{config.default_host})") do |host|
+  parser.on("--default-hosts=HOST1,HOST2,...", Array,
+            "Default host names for each request.",
+            "(#{config.default_hosts.join(",")})") do |hosts|
     config.default_host = host
   end
   parser.on("--default-port=PORT", Integer,
@@ -102,6 +102,11 @@ option_parser = OptionParser.new do |parser|
             "Default timeout for each request.",
             "(#{config.default_timeout})") do |timeout|
     config.default_timeout = timeout
+  end
+  parser.on("--default-host=HOST1,HOST2,...", Array,
+            "An alias to \"--default-hosts\"",
+            "for backward compatibility.") do |hosts|
+    config.default_hosts = hosts
   end
 
   parser.separator("")

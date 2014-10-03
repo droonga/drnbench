@@ -21,7 +21,8 @@ module Drnbench
       attr_accessor :duration, :wait, :interval, :request_patterns_file
       attr_accessor :start_n_clients, :end_n_clients, :step, :n_requests, :n_slow_requests
       attr_accessor :mode
-      attr_accessor :default_host, :default_port, :default_path, :default_method, :default_timeout
+      attr_reader   :default_hosts
+      attr_accessor :default_port, :default_path, :default_method, :default_timeout
       attr_accessor :report_progressively, :output_path
 
       MIN_DURATION = 1
@@ -38,7 +39,7 @@ module Drnbench
         @mode                 = :http
         @n_slow_requests      = 5
 
-        @default_host         = "localhost"
+        @default_hosts        = ["localhost"]
         @default_port         = 80
         @default_path         = "/"
         @default_method       = "GET"
@@ -46,6 +47,8 @@ module Drnbench
 
         @report_progressively = true
         @output_path          = "/tmp/drnbench-result.csv"
+
+        @last_default_host_index = 0
       end
 
       def validate
@@ -71,6 +74,20 @@ module Drnbench
 
       def request_patterns
         @request_patterns ||= prepare_request_patterns
+      end
+
+      def default_hosts=(hosts)
+        @last_default_host_index = 0
+        @default_hosts = hosts
+      end
+
+      def default_host
+        host = @default_hosts[@last_default_host_index]
+        @last_default_host_index += 1
+        if @last_default_host_index == @default_hosts.size
+          @last_default_host_index = 0
+        end
+        host
       end
 
       private
