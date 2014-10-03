@@ -18,7 +18,7 @@ require "csv"
 
 module Drnbench
   module RequestResponse
-    class GradualRunner
+    class ProgressiveRunner
       attr_reader :report_progressively, :result
 
       def initialize(config)

@@ -94,7 +94,7 @@ args = option_parser.parse!(ARGV)
 
 config.validate
 
-runner = Drnbench::PublishSubscribe::GradualRunner.new(config)
+runner = Drnbench::PublishSubscribe::ProgressiveRunner.new(config)
 runner.run
 
 File.open(config.output_path, "w") do |file|

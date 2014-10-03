@@ -18,7 +18,7 @@ require "csv"
 
 module Drnbench
   module PublishSubscribe
-    class GradualRunner
+    class ProgressiveRunner
       attr_reader :total_results
 
       def initialize(config)

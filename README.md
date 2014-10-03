@@ -7,7 +7,7 @@ Drnbench is a benchmark tool for Droonga.
 It may be used for other HTTP servers.
 
 Drnbench provides features to send multiple random requests with different settings periodically.
-Number of clients (requests) in each period will be automatically increased gradually.
+Number of clients (requests) in each period will be automatically increased progressively.
 So you'll be able to guess the limit performance of the throughput of a server, via the report like following:
 
     n_clients,total_n_requests,queries_per_second,min_elapsed_time,max_elapsed_time,average_elapsed_time,200
