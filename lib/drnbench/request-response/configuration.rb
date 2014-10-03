@@ -28,9 +28,10 @@ module Drnbench
       MIN_WAIT     = 0
 
       def initialize
-        @wait                 = 1
-        @interval             = 5
-        @start_n_clients      = 1
+        @duration             = 30
+        @wait                 = 0.01
+        @interval             = 10
+        @start_n_clients      = 0
         @end_n_clients        = 1
         @step                 = 1
         @n_requests           = 1000
