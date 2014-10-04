@@ -2,8 +2,10 @@
 
 ## 1.0.3: 2014-10-29 (planned)
 
- * `drnbench-request-response` now accepts multiple hosts as a comma separated list via the `--default-hosts` option.
-   You can simulate load balancing for multiple endpoints easily.
+ * `drnbench-request-response`
+   * Accept multiple hosts as a comma separated list via the `--default-hosts` option.
+     You can simulate load balancing for multiple endpoints easily.
+   * Accept plain text file of a list of paths as the patterns file.
 
 ## 1.0.2: 2014-07-30
 
