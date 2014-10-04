@@ -6,6 +6,9 @@
    * Accept multiple hosts as a comma separated list via the `--default-hosts` option.
      You can simulate load balancing for multiple endpoints easily.
    * Accept plain text file of a list of paths as the patterns file.
+ * `drnbench-extract-searchterms`
+   * New `--sanitize` option is introduced to remove special characters for the `query` parameter.
+   * New `--escape` option is introduced to escape URI-incompatible characters.
 
 ## 1.0.2: 2014-07-30
 
