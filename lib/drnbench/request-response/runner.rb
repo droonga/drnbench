@@ -97,8 +97,8 @@ module Drnbench
       end
 
       def populate_request_pattern(request_pattern)
-        frequency = request_pattern["frequency"].to_f
-        n_requests = @config.n_requests * @config.end_n_clients * frequency
+        frequency = request_pattern["frequency"] || default_frequency
+        n_requests = @config.n_requests * @config.end_n_clients * frequency.to_f
 
         base_patterns = nil
         if request_pattern["pattern"]
@@ -116,6 +116,11 @@ module Drnbench
           pattern["timeout"] ||= request_pattern["timeout"]
           @requests << pattern
         end
+      end
+
+      def default_frequency
+        size = @config.request_patterns.size
+        1.0 / size
       end
     end
   end
