@@ -74,7 +74,7 @@ option_parser = OptionParser.new do |parser|
     config.mode = mode.gsub(/-/, "_")
   end
   parser.on("--request-patterns-file=PATH",
-            "Path to request patterns JSON file.") do |path|
+            "Path to request patterns file.") do |path|
     config.request_patterns_file = File.expand_path(path)
   end
 
