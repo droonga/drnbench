@@ -110,6 +110,9 @@ module Drnbench
 
         n_requests.round.times do |count|
           pattern = base_patterns[count % base_patterns.size]
+          if pattern.is_a?(String)
+            pattern = { "path" => pattern }
+          end
           pattern["host"] ||= request_pattern["host"]
           pattern["port"] ||= request_pattern["port"]
           pattern["method"] ||= request_pattern["method"]
