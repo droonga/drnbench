@@ -14,7 +14,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 require "ostruct"
-require "json"
 require "drnbench/request-response/request-pattern"
 
 module Drnbench::RequestResponse::RequestPattern
