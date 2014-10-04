@@ -93,7 +93,12 @@ module Drnbench
       private
       def prepare_request_patterns
         request_patterns = File.read(@request_patterns_file)
-        request_patterns = JSON.parse(request_patterns)
+        begin
+          request_patterns = JSON.parse(request_patterns)
+        rescue JSON::ParseError
+          # it's a simple text file, list of paths
+          request_patterns = request_patterns.strip.split(/\r?\n/)
+        end
       end
     end
   end
