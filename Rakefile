@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+task :default => :test
+
 require "bundler/gem_helper"
 require "packnga"
 
@@ -30,4 +32,9 @@ spec = helper.gemspec
 Packnga::DocumentTask.new(spec) do |task|
   task.original_language = "en"
   task.translate_languages = ["ja"]
+end
+
+desc "Run tests"
+task :test do
+  ruby("test/run-test.rb")
 end
