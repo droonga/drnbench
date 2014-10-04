@@ -22,6 +22,7 @@ require "json"
 
 options = OpenStruct.new
 options.column_index = 0
+options.escape = false
 
 option_parser = OptionParser.new do |parser|
   parser.version = Drnbench::VERSION
@@ -31,9 +32,20 @@ option_parser = OptionParser.new do |parser|
             "(#{options.output_column_index})") do |index|
     options.column_index = index
   end
+  parser.on("--escape",
+            "Escape output for URL parameter") do
+    options.escape = true
+  end
 end
 
 groonga_select_result_files = option_parser.parse!(ARGV)
+
+def sanitize_for_param(value)
+  value.to_s
+       .gsub(/[:;]/, " ")
+       .strip
+       .gsub(/ +/, "%20")
+end
 
 def output_column_value(select_result, column_index)
   select_result = JSON.parse(select_result)
@@ -41,7 +53,9 @@ def output_column_value(select_result, column_index)
   search_result = body.first
   records = search_result[2..-1]
   records.each do |record|
-    puts record[column_index]
+    value = record[column_index]
+    value = sanitize_for_param(value) if options.escape
+    puts(value)
   end
 end
 
