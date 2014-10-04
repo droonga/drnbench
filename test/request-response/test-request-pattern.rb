@@ -103,6 +103,8 @@ module Drnbench::RequestResponse::RequestPattern
         abstract = Abstract.new(source, CONFIG)
         assert_equal(PATH_STRING,
                      abstract.groups.first.patterns.first.path)
+        assert_equal(1.0,
+                     abstract.groups.first.frequency)
       end
     end
   end
