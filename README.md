@@ -35,39 +35,7 @@ In this scenario, you have to do:
 
 Drnbench will start multiple clients and send many requests based on the patterns file.
 
- 1. Create a patterns file in the format:
-    
-        {
-          "(pattern type 1 name)": {
-            "frequency": (appearance ratio in all requests),
-            "path":      "(path to the endpoint)",
-            "method":    "(HTTP method)",
-            "patterns":  [
-              { "body": (request body 1 sent by POST method) },
-              { "body": (request body 2 sent by POST method) },
-              ...
-            ]
-          }
-          "(patterns type 2 name)": {
-            "frequency": (appearance ratio in all requests),
-            "patterns":  [
-              {
-                "path":   "(path to the endpoint 1)",
-                "method": "(HTTP method)",
-                "body":   (request body 1 sent by POST method)
-              },
-              {
-                "path":   "(path to the endpoint 2)",
-                "method": "(HTTP method)",
-                "body":   (request body 2 sent by POST method)
-              },
-              ...
-            ]
-          },
-          ...
-        }
-    
-    For example, a file "patterns.json" like:
+ 1. Create a patterns file "patterns.json", like:
     
         {
           "user search": {
@@ -107,6 +75,81 @@ Drnbench will start multiple clients and send many requests based on the pattern
             --port=80
     
  4. You'll get a report.
+
+#### Detailed format of the patterns file
+
+##### Abstract
+
+Abstract type A, grouped patterns with names:
+
+~~~
+{
+  "group name 1": (patterns group),
+  "group name 2": (patterns group),
+  ...
+}
+~~~
+
+Abstract type B, grouped patterns without names:
+
+~~~
+[
+  (patterns group),
+  (patterns group),
+  ...
+]
+~~~
+
+Abstract type C, non-grouped patterns:
+
+~~~
+(patterns group)
+~~~
+
+##### Patterns group
+
+Patterns group type A, without options:
+
+~~~
+[
+  (pattern1),
+  (pattern2),
+  ...
+]
+~~~
+
+Patterns group type B, with options:
+
+~~~
+{
+  "frequency": (appearance ratio in all requests, optional),
+  "path":      "(path to the endpoint, optional)",
+  "method":    "(HTTP method, optional)",
+  "patterns":  [
+    (pattern1),
+    (pattern2),
+    ...
+  ]
+}
+~~~
+
+##### Pattern
+
+Pattern type A, simple path string:
+
+~~~
+"/path/to/the/API/or/page"
+~~~
+
+Pattern B, detailed object:
+
+~~~
+{
+  "path":   "/path/to/the/API/or/page",
+  "method": "(HTTP method)",
+  "body":   (request body sent by POST method)
+}
+~~~
 
 
 ### Benchmarking of request-responsne style commands, with a Droonga-based search system
