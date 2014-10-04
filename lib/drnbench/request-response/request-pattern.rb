@@ -36,12 +36,6 @@ module Drnbench
 
         private
         def prepare_groups
-          if @source.is_a?(Hash)
-            return @source.values.collect do |group|
-              PatternsGroup.new(group, self)
-            end
-          end
-
           if @source.is_a?(Array)
             if PatternsGroup.valid_source?(@source.first)
               return @source.collect do |group|
@@ -52,6 +46,15 @@ module Drnbench
               return [
                 PatternsGroup.new(@source, self),
               ]
+            end
+          elsif @source.is_a?(Hash)
+            if PatternsGroup.valid_source?(@source)
+              return [
+                PatternsGroup.new(@source, self),
+              ]
+            end
+            return @source.values.collect do |group|
+              PatternsGroup.new(group, self)
             end
           end
 
@@ -80,7 +83,7 @@ module Drnbench
             if source.is_a?(Hash)
               return source.has_key?("patterns")
             end
-            raise "invalid group: #{JSON.stringify(source)}"
+            false
           end
         end
 
@@ -148,15 +151,23 @@ module Drnbench
             return true if source.is_a?(String)
             return false if source.is_a?(Array)
             return !source.has_key?("patterns") if source.is_a?(Hash)
-            raise "invalid pattern: #{JSON.stringify(source)}"
+            false
           end
         end
 
-        attr_reader :group
+        attr_reader :source, :group
 
         def initialize(source, group)
           @source = source
           @group = group
+        end
+
+        def path
+          if @source.is_a?(String)
+            @source
+          else
+            @source["path"]
+          end
         end
 
         def to_request
