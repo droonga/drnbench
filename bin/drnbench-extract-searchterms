@@ -30,7 +30,7 @@ option_parser = OptionParser.new do |parser|
 
   parser.on("--column-index=INDEX", Integer,
             "Index number of the column to be extracted.",
-            "(#{options.output_column_index})") do |index|
+            "(#{options.column_index})") do |index|
     options.column_index = index
   end
   parser.on("--escape",
