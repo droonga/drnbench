@@ -45,24 +45,24 @@ def escape_for_param(value)
   CGI.escape(value.to_s)
 end
 
-def output_column_value(select_result, column_index)
+def output_column_value(select_result, options)
   select_result = JSON.parse(select_result)
   body = select_result[1]
   search_result = body.first
   records = search_result[2..-1]
   records.each do |record|
-    value = record[column_index]
+    value = record[options.column_index]
     value = escape_for_param(value) if options.escape
     puts(value)
   end
 end
 
 if groonga_select_result_files.empty?
-  output_column_value($stdin.read, options.column_index)
+  output_column_value($stdin.read, options)
 else
   groonga_select_result_files.each do |select_result_file|
     File.open(select_result_file) do |input|
-      output_column_value(input.read, options.column_index)
+      output_column_value(input.read, options)
     end
   end
 end
