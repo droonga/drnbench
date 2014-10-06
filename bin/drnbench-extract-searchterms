@@ -23,7 +23,6 @@ require "cgi"
 
 options = OpenStruct.new
 options.column_index = 0
-options.sanitize = false
 options.escape = false
 
 option_parser = OptionParser.new do |parser|
@@ -34,10 +33,6 @@ option_parser = OptionParser.new do |parser|
             "(#{options.output_column_index})") do |index|
     options.column_index = index
   end
-  parser.on("--sanitize",
-            "Sanitize dangerous characters for \"query\" parameter") do
-    options.sanitize = true
-  end
   parser.on("--escape",
             "Escape output for URL parameter") do
     options.escape = true
@@ -45,12 +40,6 @@ option_parser = OptionParser.new do |parser|
 end
 
 groonga_select_result_files = option_parser.parse!(ARGV)
-
-def sanitize_for_query(value)
-  value.to_s
-       .gsub(/[:;]/, " ")
-       .strip
-end
 
 def escape_for_param(value)
   CGI.escape(value.to_s)
@@ -63,7 +52,6 @@ def output_column_value(select_result, column_index)
   records = search_result[2..-1]
   records.each do |record|
     value = record[column_index]
-    value = sanitize_for_query(value) if options.sanitize
     value = escape_for_param(value) if options.escape
     puts(value)
   end
