@@ -19,7 +19,7 @@ require "drnbench"
 require "ostruct"
 require "optparse"
 require "json"
-require "uri"
+require "cgi"
 
 options = OpenStruct.new
 options.column_index = 0
@@ -53,7 +53,7 @@ def sanitize_for_query(value)
 end
 
 def escape_for_param(value)
-  URI.escape(URI.escape(value.to_s), /[;&]/)
+  CGI.escape(value.to_s)
 end
 
 def output_column_value(select_result, column_index)
