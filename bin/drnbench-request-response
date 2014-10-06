@@ -81,7 +81,7 @@ option_parser = OptionParser.new do |parser|
   parser.on("--default-hosts=HOST1,HOST2,...", Array,
             "Default host names for each request.",
             "(#{config.default_hosts.join(",")})") do |hosts|
-    config.default_host = host
+    config.default_hosts = hosts
   end
   parser.on("--default-port=PORT", Integer,
             "Default port number for each request.",
