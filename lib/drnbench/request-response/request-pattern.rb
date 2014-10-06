@@ -71,6 +71,7 @@ module Drnbench
               requests << pattern.to_request
             end
           end
+          requests
         end
       end
 
