@@ -1,6 +1,6 @@
 # News
 
-## 1.0.3: 2014-10-29 (planned)
+## 1.0.3: 2014-10-07
 
  * `drnbench-request-response`
    * Accept multiple hosts as a comma separated list via the `--default-hosts` option.
