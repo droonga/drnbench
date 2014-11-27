@@ -84,6 +84,8 @@ module Drnbench
         child_read, parent_write = IO.pipe
         @child_process_pipes << [parent_read, parent_write]
 
+        # Prepare request queue for child process at first
+        # to reduce needless inter-process communications (IPC) while running!
         child_process_requests_queue = Queue.new
         n_requests_per_process.times.each do |index|
           child_process_requests_queue.push(@requests_queue.pop)
@@ -104,6 +106,7 @@ module Drnbench
             message = child_read.gets
             if message and message.chomp == MESSAGE_EXIT
               clients.each(&:stop)
+              # We also should reduce IPC for results.
               @result.each do |result|
                 @parent.push_result(result)
               end
