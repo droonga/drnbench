@@ -75,15 +75,18 @@ module Drnbench
 
       def setup_child_processes
         @child_process_pipes = []
+        @total_n_clients = 0
         n_processes.times.each do |index|
           setup_child_process
         end
       end
 
       def setup_child_process
-        parent_read, child_write = IO.pipe
-        child_read, parent_write = IO.pipe
-        @child_process_pipes << [parent_read, parent_write]
+        n_clients = n_clients_per_process
+        if @total_n_clients + n_clients > @n_clients
+          n_clients = @n_clients - @total_n_clients
+        end
+        return if n_clients <= 0
 
         # Prepare request queue for child process at first
         # to reduce needless inter-process communications (IPC) while running!
@@ -91,6 +94,10 @@ module Drnbench
         n_requests_per_process.times.each do |index|
           child_process_requests_queue.push(@requests_queue.pop)
         end
+
+        parent_read, child_write = IO.pipe
+        child_read, parent_write = IO.pipe
+        @child_process_pipes << [parent_read, parent_write]
 
         fork do
           parent_write.close
@@ -101,7 +108,7 @@ module Drnbench
           @requests_queue = child_process_requests_queue
           @result = []
 
-          clients = setup_clients(n_clients_per_process)
+          clients = setup_clients(n_clients)
 
           loop do
             message = child_read.gets
@@ -195,7 +202,7 @@ module Drnbench
       end
 
       def n_clients_per_process
-        (@n_clients.to_f / n_processes).round
+        (@n_clients.to_f / n_processes).ceil
       end
 
       def n_requests_per_process
