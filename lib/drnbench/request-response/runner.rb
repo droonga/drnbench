@@ -170,6 +170,8 @@ module Drnbench
       end
 
       def kill_child_processes
+        puts "Collecting results..."
+
         @child_process_pipes.each do |input, output|
           output.puts(MESSAGE_EXIT)
         end
