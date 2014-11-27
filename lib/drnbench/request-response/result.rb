@@ -16,7 +16,7 @@
 module Drnbench
   module RequestResponse
     class Result
-      attr_reader :n_clients, :statuses, :n_slow_requests
+      attr_reader :n_clients, :statuses, :n_slow_requests, :n_fast_requests
       attr_accessor :duration
 
       class << self
@@ -36,6 +36,7 @@ module Drnbench
         @n_clients = params[:n_clients]
         @duration = params[:duration]
         @n_slow_requests = params[:n_slow_requests] || 5
+        @n_fast_requests = params[:n_fast_requests] || 5
 
         @results = []
         @total_elapsed_time = 0.0
@@ -89,26 +90,42 @@ module Drnbench
 
       def top_slow_requests
         slow_requests[0..@n_slow_requests-1].collect do |result|
-          request = result[:request]
-          status = result[:status].to_i
-          if status.zero?
-            status = "#{status}(aborted)"
-          end
-          index = result[:index]
-          index = "#{index}(last)" if result[:last]
-          [
-            "#{result[:elapsed_time]} sec:",
-            request["method"],
-            status,
-            "<#{result[:client]}>#{index}",
-            "http://#{request["host"]}:#{request["port"]}#{request["path"]}",
-          ].join(" ")
+          format_result_for_request_line(result)
         end
+      end
+
+      def top_fast_requests
+        fast_requests[0..@n_fast_requests-1].collect do |result|
+          format_result_for_request_line(result)
+        end
+      end
+
+      def format_result_for_request_line(result)
+        request = result[:request]
+        status = result[:status].to_i
+        if status.zero?
+          status = "#{status}(aborted)"
+        end
+        index = result[:index]
+        index = "#{index}(last)" if result[:last]
+        [
+          "#{result[:elapsed_time]} sec:",
+          request["method"],
+          status,
+          "<#{result[:client]}>#{index}",
+          "http://#{request["host"]}:#{request["port"]}#{request["path"]}",
+        ].join(" ")
       end
 
       def slow_requests
         @results.sort do |a, b|
           b[:elapsed_time] <=> a[:elapsed_time]
+        end
+      end
+
+      def fast_requests
+        @results.sort do |a, b|
+          a[:elapsed_time] <=> b[:elapsed_time]
         end
       end
 
@@ -123,6 +140,11 @@ module Drnbench
         "  min:     #{min_elapsed_time} sec\n" +
         "  max:     #{max_elapsed_time} sec\n" +
         "  average: #{average_elapsed_time} sec\n" +
+        "Top #{@n_fast_requests} fast requests:\n" +
+        " [time: method status <client>index url]\n" +
+        top_fast_requests.collect do |request|
+          "  #{request}"
+        end.join("\n") + "\n" +
         "Top #{@n_slow_requests} slow requests:\n" +
         " [time: method status <client>index url]\n" +
         top_slow_requests.collect do |request|

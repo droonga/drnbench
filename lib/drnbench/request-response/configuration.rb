@@ -19,7 +19,8 @@ module Drnbench
   module RequestResponse
     class Configuration
       attr_accessor :duration, :wait, :interval, :request_patterns_file
-      attr_accessor :start_n_clients, :end_n_clients, :step, :n_requests, :n_slow_requests
+      attr_accessor :start_n_clients, :end_n_clients, :step, :n_requests
+      attr_accessor :n_slow_requests, :n_fast_requests
       attr_accessor :mode
       attr_reader   :default_hosts
       attr_accessor :default_port, :default_path, :default_method, :default_timeout
@@ -38,6 +39,7 @@ module Drnbench
         @n_requests           = 1000
         @mode                 = :http
         @n_slow_requests      = 5
+        @n_fast_requests      = 5
 
         @default_hosts        = ["localhost"]
         @default_port         = 80

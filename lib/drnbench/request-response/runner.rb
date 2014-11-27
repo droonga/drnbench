@@ -62,6 +62,7 @@ module Drnbench
         end
         @result = Result.new(:n_clients => @n_clients,
                              :duration => @config.duration,
+                             :n_fast_requests => @config.n_fast_requests,
                              :n_slow_requests => @config.n_slow_requests)
 
         setup_child_processes

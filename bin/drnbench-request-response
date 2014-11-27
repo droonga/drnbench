@@ -39,6 +39,11 @@ option_parser = OptionParser.new do |parser|
             "(#{config.n_slow_requests})") do |n_slow_requests|
     config.n_slow_requests = n_slow_requests
   end
+  parser.on("--n-fast-requests=N", Integer,
+            "Number of fast requests to be reported.",
+            "(#{config.n_fast_requests})") do |n_fast_requests|
+    config.n_fast_requests = n_fast_requests
+  end
 
   parser.separator("")
   parser.separator("Progressive benchmark:")
