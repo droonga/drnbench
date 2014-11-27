@@ -19,9 +19,9 @@ module Drnbench
     DEFAULT_COMMAND   = "search"
     DEFAULT_METHOD    = "POST"
 
-    def initialize(params, config)
+    def initialize(params)
       super
-      @command = params["command"] || DEFAULT_COMMAND
+      @command = params[:command] || DEFAULT_COMMAND
     end
 
     private

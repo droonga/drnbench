@@ -44,6 +44,10 @@ module Drnbench
       end
 
       def <<(result)
+        push(result)
+      end
+
+      def push(result)
         clear_cached_statistics
 
         @results << result

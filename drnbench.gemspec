@@ -51,6 +51,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency("json")
   spec.add_runtime_dependency("droonga-client")
   spec.add_runtime_dependency("drntest")
+  spec.add_runtime_dependency("facter")
 
   spec.add_development_dependency("bundler")
   spec.add_development_dependency("rake")

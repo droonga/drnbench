@@ -16,28 +16,36 @@
 require "thread"
 require "droonga/client"
 require "json"
+require "drb"
 
 module Drnbench
   class HttpClient
-    attr_reader :requests, :results, :wait
+    attr_reader :runner, :results, :wait
 
     SUPPORTED_HTTP_METHODS = ["GET", "POST"]
 
     @@count = 0
 
-    def initialize(params, config)
-      @requests = params[:requests]
-      @result   = params[:result]
-      @config   = config
+    def initialize(params)
+      @runner   = params[:runner]
+      @config   = params[:config]
       @count    = 0
       @id       = @@count
       @@count += 1
+      @thread = nil
     end
 
     def run
       @thread = Thread.new do
+        start_time = Time.now
         loop do
-          request = @requests.pop
+          if @runner.empty?
+            puts "WORNING: requests queue becomes empty! (#{Time.now - start_time} sec)"
+            stop
+            break
+          end
+
+          request = @runner.pop_request
           request = fixup_request(request)
 
           client = Droonga::Client.new(:protocol => :http,
@@ -51,21 +59,21 @@ module Drnbench
           @last_start_time = start_time
           begin
           response = client.request(request)
-            @result << {
+            @runner.push_result(
               :request => request,
               :status => response.code,
               :elapsed_time => Time.now - start_time,
               :client => @id,
               :index => @count,
-            }
+            )
           rescue Timeout::Error
-            @result << {
+            @runner.push_result(
               :request => request,
               :status => "0",
               :elapsed_time => Time.now - start_time,
               :client => @id,
               :index => @count,
-            }
+            )
           end
           @last_request = nil
           @last_start_time = nil
@@ -77,18 +85,25 @@ module Drnbench
     end
 
     def stop
+      return unless @thread
+
       @thread.exit
+      @thread = nil
 
       if @last_request
-        @result << {
+        @runner.push_result(
           :request => @last_request,
           :status => "0",
           :elapsed_time => Time.now - @last_start_time,
           :client => @id,
           :index => @count,
           :last => true,
-        }
+        )
       end
+    end
+
+    def running?
+      not @thread.nil?
     end
 
     private
