@@ -1,5 +1,14 @@
 # News
 
+## 1.0.4: 2014-11-29 (planned)
+
+ * `drnbench-request-response`
+   * Not only top slow requests, but top fast requests are also reported.
+     It will help you to detect "strange good" results from invalid queries or something.
+     The number of reported fast requests can be customized via the new `--n-fast-requests` option.
+   * Virtual clients are working with multiple processes.
+     If there are multiple processors in your computer, drnbench uses them more effectively.
+
 ## 1.0.3: 2014-10-07
 
  * `drnbench-request-response`
