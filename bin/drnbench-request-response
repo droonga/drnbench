@@ -18,6 +18,7 @@
 
 require "drnbench"
 require "optparse"
+require "sigdump/setup"
 
 config = Drnbench::RequestResponse::Configuration.new
 option_parser = OptionParser.new do |parser|
