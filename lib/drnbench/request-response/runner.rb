@@ -95,9 +95,6 @@ module Drnbench
         child_read, parent_write = IO.pipe
 
         pid = fork do
-          # Because continuous benchmark increases objects,
-          # GC painflly slows down the process.
-          GC.disable
 
           parent_write.close
           parent_read.close
@@ -106,6 +103,11 @@ module Drnbench
 
           @requests = requests_queue
           @result = []
+
+          # Because continuous benchmark increases objects,
+          # GC painflly slows down the process.
+          GC.start
+          GC.disable
 
           clients = setup_clients(n_clients)
 
