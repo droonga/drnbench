@@ -74,7 +74,7 @@ module Drnbench
       end
 
       def setup_child_processes
-        @child_process_pipes = []
+        @child_processes = []
         @total_n_clients = 0
         n_processes.times.each do |index|
           setup_child_process
@@ -97,9 +97,8 @@ module Drnbench
 
         parent_read, child_write = IO.pipe
         child_read, parent_write = IO.pipe
-        @child_process_pipes << [parent_read, parent_write]
 
-        fork do
+        pid = fork do
           parent_write.close
           parent_read.close
           druby_uri = child_read.gets.chomp
@@ -125,6 +124,12 @@ module Drnbench
             sleep(3)
           end
         end
+        @child_processes << {
+          :pid    => pid,
+          :input  => parent_read,
+          :output => parent_write,
+        }
+
         child_read.close
         child_write.close
       end
@@ -148,8 +153,8 @@ module Drnbench
 
       def initiate_child_processes
         DRb.start_service("druby://localhost:0", self)
-        @child_process_pipes.each do |input, output|
-          output.puts(DRb.uri)
+        @child_processes.each do |child|
+          child[:output].puts(DRb.uri)
         end
       end
 
@@ -180,16 +185,21 @@ module Drnbench
       def kill_child_processes
         puts "Collecting results..."
 
-        @child_process_pipes.each do |input, output|
-          output.puts(MESSAGE_EXIT)
+        @child_processes.each do |child|
+          child[:output].puts(MESSAGE_EXIT)
         end
 
         loop do
-          @child_process_pipes = @child_process_pipes.reject do |input, output|
-            message = input.gets
-            message and message.chomp == MESSAGE_COMPLETE
+          @child_processes = @child_processes.reject do |child|
+            message = child[:input].gets
+            if message and message.chomp == MESSAGE_COMPLETE
+              Process.detach(child[:pid])
+              true
+            else
+              false
+            end
           end
-          break if @child_process_pipes.empty?
+          break if @child_processes.empty?
         end
       end
 
