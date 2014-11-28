@@ -37,6 +37,7 @@ module Drnbench
 
     def run
       @thread = Thread.new do
+        clients = {}
         start_time = Time.now
         loop do
           if @runner.empty?
@@ -48,10 +49,14 @@ module Drnbench
           request = @runner.pop_request
           request = fixup_request(request)
 
-          client = Droonga::Client.new(:protocol => :http,
-                                       :host => request["host"],
-                                       :port => request["port"],
-                                       :timeout => request["timeout"])
+          client_params = {
+            :protocol => :http,
+            :host     => request["host"],
+            :port     => request["port"],
+            :timeout  => request["timeout"],
+          }
+          client = clients[client_params.to_s] ||= Droonga::Client.new(client_params)
+
           request["headers"] ||= {}
           request["headers"]["user-agent"] = "Ruby/#{RUBY_VERSION} Droonga::Benchmark::Runner::HttpClient"
           start_time = Time.now
@@ -78,6 +83,10 @@ module Drnbench
         end
       end
       self
+    end
+
+    def client_key(request)
+      "http:#{request["host"]}:#{request["port"]}/#{request["timeout"]}"
     end
 
     def stop
