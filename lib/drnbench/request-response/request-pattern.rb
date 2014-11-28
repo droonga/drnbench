@@ -66,9 +66,17 @@ module Drnbench
           groups.each do |group|
             n_requests = @config.n_requests * @config.end_n_clients * group.frequency
             base_patterns = group.patterns.shuffle
-            n_requests.round.times do |count|
+            n_requests.ceil.times do |count|
               pattern = base_patterns[count % base_patterns.size]
-              requests << pattern.to_request
+              if @config.default_hosts.size > 1
+                @config.default_hosts.each do |host|
+                  request = pattern.to_request
+                  request["host"] ||= host
+                  requests << request
+                end
+              else
+                requests << pattern.to_request
+              end
             end
           end
           requests
@@ -172,11 +180,6 @@ module Drnbench
         end
 
         def to_request
-          @populated ||= populate
-        end
-
-        private
-        def populate
           if @source.is_a?(String)
             request = { "path" => @source }
           else
