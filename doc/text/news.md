@@ -1,6 +1,6 @@
 # News
 
-## 1.0.4: 2014-11-29 (planned)
+## 1.0.4: 2014-11-29
 
  * `drnbench-request-response`
    * Not only top slow requests, but top fast requests are also reported.
