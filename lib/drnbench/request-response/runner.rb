@@ -43,7 +43,7 @@ module Drnbench
       end
 
       def pop_request
-        @requests_queue.pop
+        @requests.pop
       end
 
       def push_result(result)
@@ -51,15 +51,11 @@ module Drnbench
       end
 
       def empty?
-        @requests_queue.empty?
+        @requests.empty?
       end
 
       private
       def process_requests
-        @requests_queue = Queue.new
-        @requests.each do |request|
-          @requests_queue.push(request)
-        end
         @result = Result.new(:n_clients => @n_clients,
                              :duration => @config.duration,
                              :n_fast_requests => @config.n_fast_requests,
@@ -90,9 +86,9 @@ module Drnbench
 
         # Prepare request queue for child process at first
         # to reduce needless inter-process communications (IPC) while running!
-        child_process_requests_queue = Queue.new
-        n_requests_per_process.times.each do |index|
-          child_process_requests_queue.push(@requests_queue.pop)
+        requests_queue = Queue.new
+        @requests.slice!(0..n_requests_per_process).each do |request|
+          requests_queue.push(request)
         end
 
         parent_read, child_write = IO.pipe
@@ -104,7 +100,7 @@ module Drnbench
           druby_uri = child_read.gets.chomp
           @parent = DRbObject.new_with_uri(druby_uri)
 
-          @requests_queue = child_process_requests_queue
+          @requests = requests_queue
           @result = []
 
           clients = setup_clients(n_clients)
@@ -129,6 +125,8 @@ module Drnbench
           :input  => parent_read,
           :output => parent_write,
         }
+
+        requests_queue = nil
 
         child_read.close
         child_write.close
