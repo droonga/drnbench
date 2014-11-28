@@ -85,10 +85,6 @@ module Drnbench
       self
     end
 
-    def client_key(request)
-      "http:#{request["host"]}:#{request["port"]}/#{request["timeout"]}"
-    end
-
     def stop
       return unless @thread
 
